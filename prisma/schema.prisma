@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  password        String
+  role            String
+  createdAt       DateTime @default(now()) @db.DateTime
+  updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+model category {
+  id              Int      @id @default(autoincrement())
+  category_name   String
+  items           items[]
+  createdAt       DateTime @default(now()) @db.DateTime
+  updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+model units {
+  id              Int      @id @default(autoincrement())
+  units_name      String
+  items           items[]
+  createdAt       DateTime @default(now()) @db.DateTime
+  updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
+}
+model brands {
+  id              Int      @id @default(autoincrement())
+  brands_name     String
+  items           items[]
+  createdAt       DateTime @default(now()) @db.DateTime
+  updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+model items {
+  id              Int      @id @default(autoincrement())
+  items_name      String
+  purchaseitems   purchaseitems[]
+  items_category  category @relation(fields: [categoryId],references: [id])
+  categoryId      Int
+  description     String
+  items_brands    brands   @relation(fields: [brandsId],references: [id])
+  brandsId        Int
+  items_units     units    @relation(fields: [unitsId],references: [id])
+  unitsId         Int
+  createdAt       DateTime @default(now()) @db.DateTime
+  updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+model supplier {
+  id              Int      @id @default(autoincrement())
+  supplier_name   String
+  contact_person  String
+  purchaseitems   purchaseitems[]
+  mobile_number   String
+  address         String
+  createdAt       DateTime @default(now()) @db.DateTime
+  updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+
+model purchaseitems {
+  id                    Int      @id @default(autoincrement())
+  purchaseitems_items   items @relation(fields: [itemId],references: [id])
+  itemId                Int
+  purchaseitemsId       supplier @relation(fields: [supplierId],references: [id])
+  supplierId            Int
+  purchase_qty          Float
+  price_per_unit        Float
+  tax_Id                Int
+  createdAt             DateTime @default(now()) @db.DateTime
+  updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+
+
+
