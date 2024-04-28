@@ -108,4 +108,38 @@ const SupplierService = async (req) => {
     }
 }
 
-export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService}
+const CustomertypeService = async (req) => {
+    try {
+        const prisma = new PrismaClient();
+        const { type_name} = req.body;
+        const Customertype = await prisma.customertype.create({
+            data: {
+                type_name: type_name
+            }
+        });
+        return { status: "success", data: Customertype };
+    } catch (e) {
+        console.error(e);
+        return { status: "fail", data: e.message };
+    }
+}
+const CustomerService = async (req) => {
+    try {
+        const prisma = new PrismaClient();
+        const { customer_name,customertypeId } = req.body;
+        const Customer = await prisma.customer.create({
+            data: {
+                customer_name: customer_name,
+                customertypeId: customertypeId
+            }
+        });
+        return { status: "success", data: Customer };
+    } catch (e) {
+        console.error(e);
+        return { status: "fail", data: e.message };
+    }
+}
+
+
+
+export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService}

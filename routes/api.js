@@ -3,7 +3,7 @@ import * as AuthController from "../controllers/AuthController.js"
 import * as UpdateController from "../controllers/UpdateController.js"
 import * as ItemController from "../controllers/ItemController.js"
 import AuthVarification from "../middlewares/AuthVarification.js";
-import {supplier} from "../controllers/ItemController.js";
+import {customer, customertype, supplier} from "../controllers/ItemController.js";
 
 const router = express.Router();
 
@@ -24,6 +24,8 @@ router.post('/items',AuthVarification,ItemController.items)
 router.post('/units',AuthVarification,ItemController.units)
 router.post('/supplier',AuthVarification,ItemController.supplier)
 router.post('/purchaseitems',AuthVarification,ItemController.purchaseitems)
+router.post('/customertype',AuthVarification,ItemController.customertype)
+router.post('/customer',AuthVarification,ItemController.customer)
 
 
 export default router;

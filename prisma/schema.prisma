@@ -80,5 +80,24 @@ model purchaseitems {
 }
 
 
+model customertype {
+  id                    Int      @id @default(autoincrement())
+  type_name             String
+  customer              customer[]
+  createdAt             DateTime @default(now()) @db.DateTime
+  updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+
+model customer {
+  id                    Int      @id @default(autoincrement())
+  customer_name         String
+  customerId            customertype @relation(fields: [customertypeId], references: [id])
+  customertypeId        Int
+  createdAt             DateTime @default(now()) @db.DateTime
+  updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+
 
 

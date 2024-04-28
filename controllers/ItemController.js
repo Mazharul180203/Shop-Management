@@ -1,11 +1,4 @@
-import {
-    BrandService,
-    CategoryService,
-    ItemService,
-    UnitService,
-    PurchaseItemService,
-    SupplierService
-} from "../services/ItemService.js";
+import { BrandService, CategoryService, ItemService, UnitService, PurchaseItemService, SupplierService, CustomertypeService, CustomerService } from "../services/ItemService.js";
 
 export const category =  async (req,res) =>{
     let result = await CategoryService(req);
@@ -52,6 +45,22 @@ export const purchaseitems =  async (req,res) =>{
 
 export const supplier =  async (req,res) =>{
     let result = await SupplierService(req);
+    if(result['status']==="success"){
+        return res.status(200).json(result);
+    }else {
+        return res.status(401).json(result);
+    }
+}
+export const  customertype =  async (req,res) =>{
+    let result = await CustomertypeService(req);
+    if(result['status']==="success"){
+        return res.status(200).json(result);
+    }else {
+        return res.status(401).json(result);
+    }
+}
+export const customer =  async (req,res) =>{
+    let result = await CustomerService(req);
     if(result['status']==="success"){
         return res.status(200).json(result);
     }else {
