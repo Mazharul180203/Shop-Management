@@ -1,9 +1,9 @@
 import express from "express";
 import * as AuthController from "../controllers/AuthController.js"
-import * as UpdateController from "../controllers/UpdateController.js"
 import * as ItemController from "../controllers/ItemController.js"
+import * as ItemStockController from "../controllers/ItemStockController.js"
 import AuthVarification from "../middlewares/AuthVarification.js";
-import {customer, customertype, supplier} from "../controllers/ItemController.js";
+import {itemstock} from "../controllers/ItemStockController.js";
 
 const router = express.Router();
 
@@ -11,10 +11,6 @@ const router = express.Router();
 router.post('/Registration', AuthController.Registration);
 router.post('/VerifyLogin',AuthController.VerifyLogin);
 router.post('/AuthDestroy',AuthController.AuthDestroy);
-
-
-
-router.post('/Update',AuthVarification,UpdateController.Update)
 
 
 //item
@@ -28,4 +24,6 @@ router.post('/customertype',AuthVarification,ItemController.customertype)
 router.post('/customer',AuthVarification,ItemController.customer)
 
 
+//stock
+router.get('/itemstock',AuthVarification,ItemStockController.itemstock)
 export default router;
