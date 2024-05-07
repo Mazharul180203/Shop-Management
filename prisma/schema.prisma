@@ -67,16 +67,18 @@ model supplier {
 
 
 model purchaseitems {
-  id                    Int      @id @default(autoincrement())
-  purchaseitems_items   items @relation(fields: [itemId],references: [id])
+  id                    Int        @id @default(autoincrement())
+  purchaseitems_items   items      @relation(fields: [itemId],references: [id])
   itemId                Int
-  purchaseitemsId       supplier @relation(fields: [supplierId],references: [id])
+  purchaseitemsId       supplier   @relation(fields: [supplierId],references: [id])
   supplierId            Int
   purchase_qty          Float
   price_per_unit        Float
+  purchase_total        Float
+  subtotal_amount       Float
   tax_Id                Int
-  createdAt             DateTime @default(now()) @db.DateTime
-  updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
+  createdAt             DateTime   @default(now()) @db.DateTime
+  updatedAt             DateTime   @default(now()) @updatedAt @db.DateTime
 }
 
 

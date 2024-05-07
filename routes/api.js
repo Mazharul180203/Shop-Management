@@ -2,8 +2,9 @@ import express from "express";
 import * as AuthController from "../controllers/AuthController.js"
 import * as ItemController from "../controllers/ItemController.js"
 import * as ItemStockController from "../controllers/ItemStockController.js"
+import * as SearchController from "../controllers/SearchController.js"
 import AuthVarification from "../middlewares/AuthVarification.js";
-import {itemstock} from "../controllers/ItemStockController.js";
+
 
 const router = express.Router();
 
@@ -26,4 +27,8 @@ router.post('/customer',AuthVarification,ItemController.customer)
 
 //stock
 router.get('/itemstock',AuthVarification,ItemStockController.itemstock)
+
+//category-item_name
+router.post('/categoryItem/:categoryId',AuthVarification,SearchController.categoryItem)
+router.post('/itemPurchase/:itemId',AuthVarification,SearchController.itemPurchase)
 export default router;

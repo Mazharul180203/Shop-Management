@@ -68,26 +68,65 @@ const ItemService = async (req) => {
     }
 }
 
+let subtotal_amount=0,purchase_total=0;
 const PurchaseItemService = async (req) => {
     try {
         const prisma = new PrismaClient();
-        const { itemId, supplierId, purchase_qty, price_per_unit,brandsId,tax_Id} = req.body;
-        const purchaseItem = await prisma.purchaseitems.create({
-            data: {
-                itemId: itemId,
-                supplierId:supplierId,
-                purchase_qty: purchase_qty,
-                price_per_unit: price_per_unit,
-                brandsId: brandsId,
-                tax_Id: tax_Id
+        const { itemId, supplierId, purchase_qty, price_per_unit,tax_Id } = req.body;
+
+        const find = await prisma.purchaseitems.count({
+            where:{
+                itemId:itemId,
             }
-        });
-        return { status: "success", data: purchaseItem };
+        })
+           let flg = false
+           if(find===0){
+               subtotal_amount = 0;
+               purchase_total = 0;
+           }else{
+               flg=true;
+               subtotal_amount += parseFloat(purchase_qty) * parseFloat(price_per_unit);
+               purchase_total +=parseFloat(purchase_qty);
+           }
+
+           if(flg===true){
+               console.log("subtotal_amount ",subtotal_amount)
+              const purchaseItem = await prisma.purchaseitems.updateMany({
+                  where:{
+                      itemId:itemId,
+                  },
+                  data: {
+                      supplierId: supplierId,
+                      purchase_qty: purchase_qty,
+                      price_per_unit: price_per_unit,
+                      subtotal_amount: subtotal_amount,
+                      purchase_total:purchase_total,
+                      tax_Id: tax_Id
+                  }
+              });
+               return { status: "success", data: purchaseItem };
+           }
+           else{
+               const purchaseItem = await prisma.purchaseitems.create({
+                   data: {
+                       itemId: itemId,
+                       supplierId: supplierId,
+                       purchase_qty: purchase_qty,
+                       price_per_unit: price_per_unit,
+                       subtotal_amount: subtotal_amount,
+                       purchase_total:purchase_total,
+                       tax_Id: tax_Id
+                   }
+               });
+               return { status: "success", data: purchaseItem };
+           }
+
     } catch (e) {
         console.error(e);
         return { status: "fail", data: e.message };
     }
 }
+
 
 const SupplierService = async (req) => {
     try {
