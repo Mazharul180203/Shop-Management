@@ -75,7 +75,30 @@ CREATE TABLE `purchaseitems` (
     `supplierId` INTEGER NOT NULL,
     `purchase_qty` DOUBLE NOT NULL,
     `price_per_unit` DOUBLE NOT NULL,
+    `purchase_total` DOUBLE NOT NULL,
+    `subtotal_amount` DOUBLE NOT NULL,
     `tax_Id` INTEGER NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `customertype` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `type_name` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `customer` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `customer_name` VARCHAR(191) NOT NULL,
+    `customertypeId` INTEGER NOT NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -96,3 +119,6 @@ ALTER TABLE `purchaseitems` ADD CONSTRAINT `purchaseitems_itemId_fkey` FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE `purchaseitems` ADD CONSTRAINT `purchaseitems_supplierId_fkey` FOREIGN KEY (`supplierId`) REFERENCES `supplier`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `customer` ADD CONSTRAINT `customer_customertypeId_fkey` FOREIGN KEY (`customertypeId`) REFERENCES `customertype`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

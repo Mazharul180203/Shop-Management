@@ -43,6 +43,7 @@ model items {
   id              Int      @id @default(autoincrement())
   items_name      String
   purchaseitems   purchaseitems[]
+  Purchase        purchase[]
   items_category  category @relation(fields: [categoryId],references: [id])
   categoryId      Int
   description     String
@@ -59,6 +60,7 @@ model supplier {
   supplier_name   String
   contact_person  String
   purchaseitems   purchaseitems[]
+  Purchase        purchase[]
   mobile_number   String
   address         String
   createdAt       DateTime @default(now()) @db.DateTime
@@ -81,6 +83,20 @@ model purchaseitems {
   updatedAt             DateTime   @default(now()) @updatedAt @db.DateTime
 }
 
+model purchase {
+  id                  Int       @id @default(autoincrement())
+  purchase_items      items     @relation(fields: [itemId], references: [id])
+  itemId              Int
+  supplier            supplier  @relation(fields: [supplierId], references: [id])
+  supplierId          Int
+  purchase_qty        Float
+  price_per_unit      Float
+  purchase_total      Float
+  subtotal_amount     Float
+  tax_Id              Int
+  createdAt           DateTime  @default(now()) @db.DateTime
+  updatedAt           DateTime  @default(now()) @updatedAt @db.DateTime
+}
 
 model customertype {
   id                    Int      @id @default(autoincrement())

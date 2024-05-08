@@ -5,6 +5,10 @@
   - You are about to alter the column `updatedAt` on the `brands` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
   - You are about to alter the column `createdAt` on the `category` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
   - You are about to alter the column `updatedAt` on the `category` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
+  - You are about to alter the column `createdAt` on the `customer` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
+  - You are about to alter the column `updatedAt` on the `customer` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
+  - You are about to alter the column `createdAt` on the `customertype` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
+  - You are about to alter the column `updatedAt` on the `customertype` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
   - You are about to alter the column `createdAt` on the `items` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
   - You are about to alter the column `updatedAt` on the `items` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
   - You are about to alter the column `createdAt` on the `purchaseitems` table. The data in that column could be lost. The data in that column will be cast from `DateTime(0)` to `DateTime`.
@@ -23,6 +27,14 @@ ALTER TABLE `brands` MODIFY `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMEST
 
 -- AlterTable
 ALTER TABLE `category` MODIFY `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    MODIFY `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE `customer` MODIFY `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    MODIFY `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE `customertype` MODIFY `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     MODIFY `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
 
 -- AlterTable
@@ -46,20 +58,15 @@ ALTER TABLE `user` MODIFY `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAM
     MODIFY `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
 
 -- CreateTable
-CREATE TABLE `customertype` (
+CREATE TABLE `purchase` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type_name` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `customer` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `customer_name` VARCHAR(191) NOT NULL,
-    `customertypeId` INTEGER NOT NULL,
+    `itemId` INTEGER NOT NULL,
+    `supplierId` INTEGER NOT NULL,
+    `purchase_qty` DOUBLE NOT NULL,
+    `price_per_unit` DOUBLE NOT NULL,
+    `purchase_total` DOUBLE NOT NULL,
+    `subtotal_amount` DOUBLE NOT NULL,
+    `tax_Id` INTEGER NOT NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -67,4 +74,7 @@ CREATE TABLE `customer` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `customer` ADD CONSTRAINT `customer_customertypeId_fkey` FOREIGN KEY (`customertypeId`) REFERENCES `customertype`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `purchase` ADD CONSTRAINT `purchase_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `purchase` ADD CONSTRAINT `purchase_supplierId_fkey` FOREIGN KEY (`supplierId`) REFERENCES `supplier`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

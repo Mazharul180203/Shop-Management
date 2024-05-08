@@ -82,6 +82,18 @@ const PurchaseItemService = async (req) => {
             }
         });
 
+       // for the purchase history
+        const purchaseItemsRegular = await prisma.purchase.create({
+            data: {
+                itemId,
+                supplierId,
+                purchase_qty: purchaseQuantity,
+                price_per_unit: pricePerUnit,
+                subtotal_amount: subtotalAmount,
+                purchase_total: purchaseQuantity,
+                tax_Id
+            }
+        })
         if (existingPurchase === 0) {
             const purchaseItem = await prisma.purchaseitems.create({
                 data: {
