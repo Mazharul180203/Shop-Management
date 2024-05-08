@@ -68,64 +68,52 @@ const ItemService = async (req) => {
     }
 }
 
-let subtotal_amount=0,purchase_total=0;
 const PurchaseItemService = async (req) => {
+    const prisma = new PrismaClient();
     try {
-        const prisma = new PrismaClient();
-        const { itemId, supplierId, purchase_qty, price_per_unit,tax_Id } = req.body;
+        const {itemId, supplierId, purchase_qty, price_per_unit, tax_Id} = req.body;
+        const purchaseQuantity = parseFloat(purchase_qty);
+        const pricePerUnit = parseFloat(price_per_unit);
+        const subtotalAmount = purchaseQuantity * pricePerUnit;
 
-        const find = await prisma.purchaseitems.count({
-            where:{
-                itemId:itemId,
+        const existingPurchase = await prisma.purchaseitems.count({
+            where: {
+                itemId: itemId,
             }
-        })
-           let flg = false
-           if(find===0){
-               subtotal_amount = 0;
-               purchase_total = 0;
-           }else{
-               flg=true;
-               subtotal_amount += parseFloat(purchase_qty) * parseFloat(price_per_unit);
-               purchase_total +=parseFloat(purchase_qty);
-           }
+        });
 
-           if(flg===true){
-               console.log("subtotal_amount ",subtotal_amount)
-              const purchaseItem = await prisma.purchaseitems.updateMany({
-                  where:{
-                      itemId:itemId,
-                  },
-                  data: {
-                      supplierId: supplierId,
-                      purchase_qty: purchase_qty,
-                      price_per_unit: price_per_unit,
-                      subtotal_amount: subtotal_amount,
-                      purchase_total:purchase_total,
-                      tax_Id: tax_Id
-                  }
-              });
-               return { status: "success", data: purchaseItem };
-           }
-           else{
-               const purchaseItem = await prisma.purchaseitems.create({
-                   data: {
-                       itemId: itemId,
-                       supplierId: supplierId,
-                       purchase_qty: purchase_qty,
-                       price_per_unit: price_per_unit,
-                       subtotal_amount: subtotal_amount,
-                       purchase_total:purchase_total,
-                       tax_Id: tax_Id
-                   }
-               });
-               return { status: "success", data: purchaseItem };
-           }
-
+        if (existingPurchase === 0) {
+            const purchaseItem = await prisma.purchaseitems.create({
+                data: {
+                    itemId,
+                    supplierId,
+                    purchase_qty: purchaseQuantity,
+                    price_per_unit: pricePerUnit,
+                    subtotal_amount: subtotalAmount,
+                    purchase_total: purchaseQuantity,
+                    tax_Id
+                }
+            });
+            return { status: "success", data: purchaseItem };
+        } else {
+            const purchaseItem = await prisma.purchaseitems.updateMany({
+                where: { itemId },
+                data: {
+                    supplierId,
+                    purchase_qty: purchaseQuantity,
+                    price_per_unit: pricePerUnit,
+                    subtotal_amount: { increment: subtotalAmount },
+                    purchase_total: { increment: purchaseQuantity },
+                    tax_Id
+                }
+            });
+            return { status: "success", data: purchaseItem };
+        }
     } catch (e) {
         console.error(e);
         return { status: "fail", data: e.message };
     }
-}
+};
 
 
 const SupplierService = async (req) => {
