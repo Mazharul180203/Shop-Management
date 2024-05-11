@@ -71,30 +71,25 @@ const ItemService = async (req) => {
 const PurchaseItemService = async (req) => {
     const prisma = new PrismaClient();
     try {
-        const {itemId, supplierId, purchase_qty, price_per_unit, tax_Id} = req.body;
+        const { itemId, supplierId, purchase_qty, price_per_unit, tax_Id } = req.body;
         const purchaseQuantity = parseFloat(purchase_qty);
         const pricePerUnit = parseFloat(price_per_unit);
         const subtotalAmount = purchaseQuantity * pricePerUnit;
 
-        const existingPurchase = await prisma.purchaseitems.count({
+        const existingPurchases = await prisma.purchaseitems.findMany({
             where: {
                 itemId: itemId,
+            },
+            select: {
+                purchase_qty: true,
+                subtotal_amount: true
             }
         });
 
-       // for the purchase history
-        const purchaseItemsRegular = await prisma.purchase.create({
-            data: {
-                itemId,
-                supplierId,
-                purchase_qty: purchaseQuantity,
-                price_per_unit: pricePerUnit,
-                subtotal_amount: subtotalAmount,
-                purchase_total: purchaseQuantity,
-                tax_Id
-            }
-        })
-        if (existingPurchase === 0) {
+        const existingQuantity = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.purchase_qty), 0);
+        const existingSubtotal = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.subtotal_amount), 0);
+
+        if (existingPurchases.length === 0) {
             const purchaseItem = await prisma.purchaseitems.create({
                 data: {
                     itemId,
@@ -103,11 +98,16 @@ const PurchaseItemService = async (req) => {
                     price_per_unit: pricePerUnit,
                     subtotal_amount: subtotalAmount,
                     purchase_total: purchaseQuantity,
-                    tax_Id
+                    tax_Id,
+                    price_avg: pricePerUnit
                 }
             });
             return { status: "success", data: purchaseItem };
         } else {
+            const newTotalQuantity = existingQuantity + purchaseQuantity;
+            const newTotalSubtotal = existingSubtotal + subtotalAmount;
+            const newPriceAvg = newTotalSubtotal / newTotalQuantity;
+
             const purchaseItem = await prisma.purchaseitems.updateMany({
                 where: { itemId },
                 data: {
@@ -116,6 +116,7 @@ const PurchaseItemService = async (req) => {
                     price_per_unit: pricePerUnit,
                     subtotal_amount: { increment: subtotalAmount },
                     purchase_total: { increment: purchaseQuantity },
+                    price_avg: newPriceAvg,
                     tax_Id
                 }
             });
@@ -126,6 +127,7 @@ const PurchaseItemService = async (req) => {
         return { status: "fail", data: e.message };
     }
 };
+
 
 
 const SupplierService = async (req) => {

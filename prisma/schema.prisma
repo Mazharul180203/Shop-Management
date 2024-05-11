@@ -44,6 +44,7 @@ model items {
   items_name      String
   purchaseitems   purchaseitems[]
   Purchase        purchase[]
+  sales           sales[]
   items_category  category @relation(fields: [categoryId],references: [id])
   categoryId      Int
   description     String
@@ -76,6 +77,7 @@ model purchaseitems {
   supplierId            Int
   purchase_qty          Float
   price_per_unit        Float
+  price_avg             Float
   purchase_total        Float
   subtotal_amount       Float
   tax_Id                Int
@@ -94,6 +96,20 @@ model purchase {
   purchase_total      Float
   subtotal_amount     Float
   tax_Id              Int
+  createdAt           DateTime  @default(now()) @db.DateTime
+  updatedAt           DateTime  @default(now()) @updatedAt @db.DateTime
+}
+
+model sales {
+  id                  Int       @id @default(autoincrement())
+  items               items     @relation(fields: [itemsId], references: [id])
+  itemsId             Int
+  total_qty           Float
+  sales_qty           Float
+  sales_price         Float
+  dis_per             Float
+  dis                 Float
+  total               Int
   createdAt           DateTime  @default(now()) @db.DateTime
   updatedAt           DateTime  @default(now()) @updatedAt @db.DateTime
 }

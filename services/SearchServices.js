@@ -20,7 +20,7 @@ const CategoryItemService = async (req) => {
     }
 }
 
-const ItemPurchaseService = async (req) => {
+const ItemDetailService = async (req) => {
     try {
         const prisma = new PrismaClient();
         const { itemId } = req.params;
@@ -29,9 +29,17 @@ const ItemPurchaseService = async (req) => {
                 itemId: parseInt(itemId),
             },
             select: {
+                itemId:true,
                 purchase_qty: true,
                 price_per_unit:true,
-                tax_Id: true
+                tax_Id: true,
+                purchase_total:true,
+                subtotal_amount:true,
+                purchaseitems_items:{
+                    select:{
+                        items_name: true,
+                    }
+                }
             }
         });
         return { status: "success", data: itemPurchase };
@@ -40,4 +48,4 @@ const ItemPurchaseService = async (req) => {
         return { status: "fail", data: e.message };
     }
 }
-export { CategoryItemService,ItemPurchaseService }
+export { CategoryItemService, ItemDetailService }
