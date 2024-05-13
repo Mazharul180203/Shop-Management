@@ -5,7 +5,7 @@ import * as ItemStockController from "../controllers/ItemStockController.js"
 import * as SearchController from "../controllers/SearchController.js"
 import * as SaleItemController from "../controllers/SaleItemController.js"
 import AuthVarification from "../middlewares/AuthVarification.js";
-import {saleItem} from "../controllers/SaleItemController.js";
+
 
 
 const router = express.Router();

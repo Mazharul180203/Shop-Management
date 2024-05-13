@@ -81,12 +81,24 @@ const PurchaseItemService = async (req) => {
                 itemId: itemId,
             },
             select: {
-                purchase_qty: true,
+                purchase_total: true,
                 subtotal_amount: true
             }
         });
 
-        const existingQuantity = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.purchase_qty), 0);
+        const purchaseItem = await prisma.purchase.create({
+            data: {
+                itemId,
+                supplierId,
+                purchase_qty: purchaseQuantity,
+                price_per_unit: pricePerUnit,
+                subtotal_amount: subtotalAmount,
+                purchase_total: purchaseQuantity,
+                tax_Id
+            }
+        });
+
+        const existingQuantity = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.purchase_total), 0);
         const existingSubtotal = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.subtotal_amount), 0);
 
         if (existingPurchases.length === 0) {
@@ -106,6 +118,7 @@ const PurchaseItemService = async (req) => {
         } else {
             const newTotalQuantity = existingQuantity + purchaseQuantity;
             const newTotalSubtotal = existingSubtotal + subtotalAmount;
+            console.log("existingQuantity :",existingQuantity)
             const newPriceAvg = newTotalSubtotal / newTotalQuantity;
 
             const purchaseItem = await prisma.purchaseitems.updateMany({

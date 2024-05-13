@@ -101,9 +101,9 @@ model purchase {
 }
 
 model sales {
-  id                  Int       @id @default(autoincrement())
-  items               items     @relation(fields: [itemsId], references: [id])
-  itemsId             Int
+  id                  Int        @id @default(autoincrement())
+  items               items      @relation(fields: [itemId], references: [id])
+  itemId              Int
   total_qty           Float
   sales_qty           Float
   sales_price         Float
