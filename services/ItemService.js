@@ -110,6 +110,7 @@ const PurchaseItemService = async (req) => {
                     price_per_unit: pricePerUnit,
                     subtotal_amount: subtotalAmount,
                     purchase_total: purchaseQuantity,
+                    purchase_update_qty:purchaseQuantity,
                     tax_Id,
                     price_avg: pricePerUnit
                 }
@@ -118,7 +119,6 @@ const PurchaseItemService = async (req) => {
         } else {
             const newTotalQuantity = existingQuantity + purchaseQuantity;
             const newTotalSubtotal = existingSubtotal + subtotalAmount;
-            console.log("existingQuantity :",existingQuantity)
             const newPriceAvg = newTotalSubtotal / newTotalQuantity;
 
             const purchaseItem = await prisma.purchaseitems.updateMany({
@@ -129,6 +129,7 @@ const PurchaseItemService = async (req) => {
                     price_per_unit: pricePerUnit,
                     subtotal_amount: { increment: subtotalAmount },
                     purchase_total: { increment: purchaseQuantity },
+                    purchase_update_qty: { increment: purchaseQuantity },
                     price_avg: newPriceAvg,
                     tax_Id
                 }

@@ -80,6 +80,7 @@ model purchaseitems {
   price_avg             Float
   purchase_total        Float
   subtotal_amount       Float
+  purchase_update_qty    Float
   tax_Id                Int
   createdAt             DateTime   @default(now()) @db.DateTime
   updatedAt             DateTime   @default(now()) @updatedAt @db.DateTime
