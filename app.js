@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -8,9 +9,9 @@ import cookieParser from 'cookie-parser';
 import router from "./routes/api.js";
 import bodyParser from "body-parser";
 import path from 'path';
-
+dotenv.config();
 const app = express();
-const PORT = 5030;
+const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(helmet());
