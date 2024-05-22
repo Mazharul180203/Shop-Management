@@ -63,6 +63,7 @@ model supplier {
   purchaseitems             purchaseitems[]
   Purchase                  purchase[]
   purchasesuppliertrack     purchasesuppliertrack[]
+  transaction               transaction[]
   mobile_number             String
   address                   String
   createdAt                 DateTime @default(now()) @db.DateTime
@@ -140,6 +141,17 @@ model purchasesuppliertrack {
   supplierId            Int
   balance               Float
   payment_type          String
+  createdAt             DateTime @default(now()) @db.DateTime
+  updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+model transaction {
+  id                    Int      @id @default(autoincrement())
+  supplier              supplier @relation(fields: [supplierId], references: [id])
+  supplierId            Int
+  transaction_type      String
+  transaction_method    String
+  payment               Float
   createdAt             DateTime @default(now()) @db.DateTime
   updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
 }
