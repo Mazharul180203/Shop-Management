@@ -5,6 +5,7 @@ import * as ItemStockController from "../controllers/ItemStockController.js"
 import * as SearchController from "../controllers/SearchController.js"
 import * as SaleItemController from "../controllers/SaleItemController.js"
 import AuthVarification from "../middlewares/AuthVarification.js";
+import {purchasesuppliertracker} from "../controllers/ItemController.js";
 
 
 
@@ -25,7 +26,7 @@ router.post('/supplier',AuthVarification,ItemController.supplier)
 router.post('/purchaseitems',AuthVarification,ItemController.purchaseitems)
 router.post('/customertype',AuthVarification,ItemController.customertype)
 router.post('/customer',AuthVarification,ItemController.customer)
-
+router.post('/purchasesuppliertracker',AuthVarification,ItemController.purchasesuppliertracker)
 
 //stock
 router.get('/itemstock',AuthVarification,ItemStockController.itemstock)

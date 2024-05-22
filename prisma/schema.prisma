@@ -138,8 +138,8 @@ model purchasesuppliertrack {
   id                    Int      @id @default(autoincrement())
   supplier              supplier @relation(fields: [supplierId], references: [id])
   supplierId            Int
-  debit                 Float
-  credit                Float
+  balance               Float
+  payment_type          String
   createdAt             DateTime @default(now()) @db.DateTime
   updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
 }

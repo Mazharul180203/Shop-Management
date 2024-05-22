@@ -16,6 +16,8 @@ const CategoryService = async (req) => {
     }
 }
 
+
+
 const BrandService = async (req) => {
     try {
         const prisma = new PrismaClient();
@@ -31,6 +33,8 @@ const BrandService = async (req) => {
         return { status: "fail", data: e.message };
     }
 }
+
+
 
 
 const UnitService = async (req) => {
@@ -67,6 +71,8 @@ const ItemService = async (req) => {
         return { status: "fail", data: e.message };
     }
 }
+
+
 
 const PurchaseItemService = async (req) => {
     const prisma = new PrismaClient();
@@ -152,7 +158,44 @@ const PurchaseItemService = async (req) => {
     }
 };
 
+//this api must call when the purchaseitems table is call or modified because it is related to total debit or credit
+//according to their paid money
+const PurchaseSupplierTrackerService = async (req) => {
+    try{
+        const prisma = new PrismaClient();
+        const { supplierId,totalBalanceCal,payment_type} = req.body;
 
+        const existingSupplier = await prisma.purchasesuppliertrack.findMany({
+            where: {supplierId},
+            select: {
+                balance:true,
+            }
+        })
+
+        if (existingSupplier.length === 0) {
+           const existSupplierCreate =await prisma.purchasesuppliertrack.create({
+               data:{
+                   supplierId,
+                   balance:totalBalanceCal,
+                   payment_type:payment_type,
+               }
+           })
+            return { status: "success", data: existSupplierCreate };
+        }
+        else{
+            const existSupplierUpdate = await prisma.purchasesuppliertrack.updateMany({
+                where: { supplierId },
+                data:{
+                    balance:{ increment: totalBalanceCal}
+                }
+            })
+            return { status: "success", data: existSupplierUpdate };
+        }
+    }catch (e) {
+        console.error(e);
+        return { status: "fail", data: e.message };
+    }
+}
 
 
 const SupplierService = async (req) => {
@@ -208,4 +251,4 @@ const CustomerService = async (req) => {
 
 
 
-export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService}
+export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService,PurchaseSupplierTrackerService}
