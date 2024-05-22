@@ -57,15 +57,16 @@ model items {
 }
 
 model supplier {
-  id              Int      @id @default(autoincrement())
-  supplier_name   String
-  contact_person  String
-  purchaseitems   purchaseitems[]
-  Purchase        purchase[]
-  mobile_number   String
-  address         String
-  createdAt       DateTime @default(now()) @db.DateTime
-  updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
+  id                        Int      @id @default(autoincrement())
+  supplier_name             String
+  contact_person            String
+  purchaseitems             purchaseitems[]
+  Purchase                  purchase[]
+  purchasesuppliertrack     purchasesuppliertrack[]
+  mobile_number             String
+  address                   String
+  createdAt                 DateTime @default(now()) @db.DateTime
+  updatedAt                 DateTime @default(now()) @updatedAt @db.DateTime
 }
 
 
@@ -80,7 +81,7 @@ model purchaseitems {
   price_avg             Float
   purchase_total        Float
   subtotal_amount       Float
-  purchase_update_qty    Float
+  purchase_update_qty   Float
   tax_Id                Int
   createdAt             DateTime   @default(now()) @db.DateTime
   updatedAt             DateTime   @default(now()) @updatedAt @db.DateTime
@@ -133,6 +134,15 @@ model customer {
   updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
 }
 
+model purchasesuppliertrack {
+  id                    Int      @id @default(autoincrement())
+  supplier              supplier @relation(fields: [supplierId], references: [id])
+  supplierId            Int
+  debit                 Float
+  credit                Float
+  createdAt             DateTime @default(now()) @db.DateTime
+  updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
+}
 
 
 

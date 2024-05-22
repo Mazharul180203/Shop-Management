@@ -71,76 +71,87 @@ const ItemService = async (req) => {
 const PurchaseItemService = async (req) => {
     const prisma = new PrismaClient();
     try {
-        const { itemId, supplierId, purchase_qty, price_per_unit, tax_Id } = req.body;
-        const purchaseQuantity = parseFloat(purchase_qty);
-        const pricePerUnit = parseFloat(price_per_unit);
-        const subtotalAmount = purchaseQuantity * pricePerUnit;
+        const { items } = req.body;
+        for (const item of items) {
+            const { itemId, supplierId, purchase_qty, price_per_unit, tax_Id } = item;
+            const purchaseQuantity = parseFloat(purchase_qty);
+            const pricePerUnit = parseFloat(price_per_unit);
+            const subtotalAmount = purchaseQuantity * pricePerUnit;
 
-        const existingPurchases = await prisma.purchaseitems.findMany({
-            where: {
-                itemId: itemId,
-            },
-            select: {
-                purchase_total: true,
-                subtotal_amount: true
-            }
-        });
-
-        const purchaseItem = await prisma.purchase.create({
-            data: {
-                itemId,
-                supplierId,
-                purchase_qty: purchaseQuantity,
-                price_per_unit: pricePerUnit,
-                subtotal_amount: subtotalAmount,
-                purchase_total: purchaseQuantity,
-                tax_Id
-            }
-        });
-
-        const existingQuantity = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.purchase_total), 0);
-        const existingSubtotal = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.subtotal_amount), 0);
-
-        if (existingPurchases.length === 0) {
-            const purchaseItem = await prisma.purchaseitems.create({
-                data: {
-                    itemId,
-                    supplierId,
-                    purchase_qty: purchaseQuantity,
-                    price_per_unit: pricePerUnit,
-                    subtotal_amount: subtotalAmount,
-                    purchase_total: purchaseQuantity,
-                    purchase_update_qty:purchaseQuantity,
-                    tax_Id,
-                    price_avg: pricePerUnit
-                }
-            });
-            return { status: "success", data: purchaseItem };
-        } else {
-            const newTotalQuantity = existingQuantity + purchaseQuantity;
-            const newTotalSubtotal = existingSubtotal + subtotalAmount;
-            const newPriceAvg = newTotalSubtotal / newTotalQuantity;
-
-            const purchaseItem = await prisma.purchaseitems.updateMany({
+            const existingPurchases = await prisma.purchaseitems.findMany({
                 where: { itemId },
-                data: {
-                    supplierId,
-                    purchase_qty: purchaseQuantity,
-                    price_per_unit: pricePerUnit,
-                    subtotal_amount: { increment: subtotalAmount },
-                    purchase_total: { increment: purchaseQuantity },
-                    purchase_update_qty: { increment: purchaseQuantity },
-                    price_avg: newPriceAvg,
-                    tax_Id
+                select: {
+                    purchase_total: true,
+                    subtotal_amount: true
                 }
             });
-            return { status: "success", data: purchaseItem };
+
+            const existingQuantity = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.purchase_total), 0);
+            const existingSubtotal = existingPurchases.reduce((acc, cur) => acc + parseFloat(cur.subtotal_amount), 0);
+
+            if (existingPurchases.length === 0) {
+                const newPurchaseItem = await prisma.purchaseitems.create({
+                    data: {
+                        itemId,
+                        supplierId,
+                        purchase_qty: purchaseQuantity,
+                        price_per_unit: pricePerUnit,
+                        subtotal_amount: subtotalAmount,
+                        purchase_total: purchaseQuantity,
+                        purchase_update_qty: purchaseQuantity,
+                        tax_Id,
+                        price_avg: pricePerUnit
+                    }
+                });
+                await prisma.purchase.create({
+                    data: {
+                        itemId,
+                        supplierId,
+                        purchase_qty: purchaseQuantity,
+                        price_per_unit: pricePerUnit,
+                        subtotal_amount: subtotalAmount,
+                        purchase_total: purchaseQuantity,
+                        tax_Id
+                    }
+                });
+            } else {
+                const newTotalQuantity = existingQuantity + purchaseQuantity;
+                const newTotalSubtotal = existingSubtotal + subtotalAmount;
+                const newPriceAvg = newTotalSubtotal / newTotalQuantity;
+
+                const updatedPurchaseItem = await prisma.purchaseitems.updateMany({
+                    where: { itemId },
+                    data: {
+                        supplierId,
+                        purchase_qty: purchaseQuantity,
+                        price_per_unit: pricePerUnit,
+                        subtotal_amount: { increment: subtotalAmount },
+                        purchase_total: { increment: purchaseQuantity },
+                        purchase_update_qty: { increment: purchaseQuantity },
+                        price_avg: newPriceAvg,
+                        tax_Id
+                    }
+                });
+                await prisma.purchase.create({
+                    data: {
+                        itemId,
+                        supplierId,
+                        purchase_qty: purchaseQuantity,
+                        price_per_unit: pricePerUnit,
+                        subtotal_amount: subtotalAmount,
+                        purchase_total: purchaseQuantity,
+                        tax_Id
+                    }
+                });
+            }
         }
+        return { status: "success"};
     } catch (e) {
         console.error(e);
         return { status: "fail", data: e.message };
     }
 };
+
 
 
 
