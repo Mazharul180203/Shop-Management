@@ -64,6 +64,7 @@ model supplier {
   Purchase                  purchase[]
   purchasesuppliertrack     purchasesuppliertrack[]
   transaction               transaction[]
+  supplierledger            supplierledger[]
   mobile_number             String
   address                   String
   createdAt                 DateTime @default(now()) @db.DateTime
@@ -139,7 +140,7 @@ model purchasesuppliertrack {
   id                    Int      @id @default(autoincrement())
   supplier              supplier @relation(fields: [supplierId], references: [id])
   supplierId            Int
-  balance               Float
+  curr_balance          Float
   payment_type          String
   createdAt             DateTime @default(now()) @db.DateTime
   updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
@@ -149,12 +150,25 @@ model transaction {
   id                    Int      @id @default(autoincrement())
   supplier              supplier @relation(fields: [supplierId], references: [id])
   supplierId            Int
+  balance               Float
   transaction_type      String
   transaction_method    String
   payment               Float
+  curr_balance          Float
   createdAt             DateTime @default(now()) @db.DateTime
   updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
 }
 
+model supplierledger {
+  id                    Int      @id @default(autoincrement())
+  supplier              supplier @relation(fields: [supplierId], references: [id])
+  supplierId            Int
+  payment_type          String
+  credit                Float
+  debit                 Float
+  balance               Float
+  createdAt             DateTime @default(now()) @db.DateTime
+  updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
+}
 
 

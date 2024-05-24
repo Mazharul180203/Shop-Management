@@ -163,20 +163,26 @@ const PurchaseItemService = async (req) => {
 const PurchaseSupplierTrackerService = async (req) => {
     try{
         const prisma = new PrismaClient();
-        const { supplierId,totalBalanceCal,payment_type} = req.body;
+        const { supplierId,totalCost,paid, curr_balance,payment_type} = req.body;
 
         const existingSupplier = await prisma.purchasesuppliertrack.findMany({
-            where: {supplierId},
-            select: {
-                balance:true,
-            }
+            where: {supplierId}
         })
 
+        await prisma.supplierledger.create({
+            data:{
+                supplierId,
+                payment_type,
+                credit:totalCost,
+                debit:paid,
+                balance:curr_balance
+            }
+        })
         if (existingSupplier.length === 0) {
            const existSupplierCreate =await prisma.purchasesuppliertrack.create({
                data:{
                    supplierId,
-                   balance:totalBalanceCal,
+                   curr_balance:curr_balance,
                    payment_type:payment_type,
                }
            })
@@ -186,7 +192,7 @@ const PurchaseSupplierTrackerService = async (req) => {
             const existSupplierUpdate = await prisma.purchasesuppliertrack.updateMany({
                 where: { supplierId },
                 data:{
-                    balance:{ increment: totalBalanceCal}
+                    curr_balance:curr_balance
                 }
             })
             return { status: "success", data: existSupplierUpdate };
