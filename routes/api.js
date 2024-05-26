@@ -9,7 +9,6 @@ import AuthVarification from "../middlewares/AuthVarification.js";
 
 
 
-
 const router = express.Router();
 
 //Authentication
@@ -38,7 +37,7 @@ router.post('/itemDetail/:itemId',AuthVarification,SearchController.itemDetail)
 
 //item-sale
 router.post('/saleItem',AuthVarification,SaleItemController.saleItem)
-
+router.post('/salesCustomerTracker',AuthVarification,SaleItemController.salesCustomerTracker)
 //ledger
 router.post('/transaction',AuthVarification,LedgerController.transaction)
 
