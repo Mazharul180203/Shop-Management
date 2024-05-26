@@ -6,6 +6,7 @@ import * as SearchController from "../controllers/SearchController.js"
 import * as SaleItemController from "../controllers/SaleItemController.js"
 import * as LedgerController from '../controllers/LedgerController.js'
 import AuthVarification from "../middlewares/AuthVarification.js";
+import {customerPayment} from "../controllers/SaleItemController.js";
 
 
 
@@ -38,6 +39,7 @@ router.post('/itemDetail/:itemId',AuthVarification,SearchController.itemDetail)
 //item-sale
 router.post('/saleItem',AuthVarification,SaleItemController.saleItem)
 router.post('/salesCustomerTracker',AuthVarification,SaleItemController.salesCustomerTracker)
+router.post('/customerPayment',AuthVarification,SaleItemController.customerPayment)
 //ledger
 router.post('/transaction',AuthVarification,LedgerController.transaction)
 

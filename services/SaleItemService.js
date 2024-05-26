@@ -80,4 +80,42 @@ const SalesCustomerTrackerService = async (req,res) =>{
         return { status: "fail", data: e.message };
     }
 }
-export {SaleItemService,SalesCustomerTrackerService}
+
+const CustomerPaymentService = async (req, res) => {
+    try {
+        const { customertypeId, customerId, balance, transaction_type, collection_method, paid, remission, curr_balance } = req.body;
+        const result = await prisma.$transaction(async prisma => {
+            try {
+                const ledgerEntry = await prisma.customerledger.create({
+                    data: {
+                        customerId,
+                        payment_type: collection_method,
+                        credit: balance,
+                        debit: paid,
+                        balance: curr_balance
+                    }
+                });
+                const trackerUpdate = await prisma.salescustomertracker.updateMany({
+                    where: { customerId },
+                    data: { curr_balance }
+                });
+                const paymentRecord = await prisma.customerpayment.create({
+                    data: {
+                        customertypeId, customerId, balance, transaction_type, collection_method, paid, remission, curr_balance
+                    }
+                });
+
+                return { ledgerEntry, trackerUpdate, paymentRecord };
+            } catch (error) {
+                console.error('Transaction error:', error);
+            }
+        });
+
+        return res.json({ status: "success", data: result });
+    } catch (error) {
+        console.error('Service error:', error);
+        return res.status(500).json({ status: "fail", data: error.message });
+    }
+};
+
+export {SaleItemService,SalesCustomerTrackerService,CustomerPaymentService}

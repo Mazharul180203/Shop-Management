@@ -135,6 +135,7 @@ model customer {
   customertypeId        Int
   salescustomertracker  salescustomertracker[]
   customerledger        customerledger[]
+  customerpayment       customerpayment[]
   createdAt             DateTime @default(now()) @db.DateTime
   updatedAt             DateTime @default(now()) @updatedAt @db.DateTime
 }
@@ -153,10 +154,12 @@ model customerpayment {
   id                    Int            @id @default(autoincrement())
   customertype          customertype   @relation(fields: [customertypeId], references: [id])
   customertypeId        Int
-  customer_name         String
+  customer              customer       @relation(fields: [customerId],references: [id])
+  customerId            Int
   balance               Float
   transaction_type      String
   collection_method     String
+  paid                  Float
   remission             Float
   curr_balance          Float
   createdAt             DateTime @default(now()) @db.DateTime
