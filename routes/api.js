@@ -6,7 +6,6 @@ import * as SearchController from "../controllers/SearchController.js"
 import * as SaleItemController from "../controllers/SaleItemController.js"
 import * as LedgerController from '../controllers/LedgerController.js'
 import AuthVarification from "../middlewares/AuthVarification.js";
-import {customerPayment} from "../controllers/SaleItemController.js";
 
 
 
