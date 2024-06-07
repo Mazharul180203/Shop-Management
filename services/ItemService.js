@@ -35,15 +35,15 @@ const BrandService = async (req) => {
 }
 
 
-
-
 const UnitService = async (req) => {
     try {
         const prisma = new PrismaClient();
-        const { units_name } = req.body;
+        const { units_name, units_label, relation} = req.body;
         const newUnit = await prisma.units.create({
             data: {
-                units_name: units_name
+                units_name,
+                units_label,
+                relation  /// calculate the value from the frontend
             }
         });
         return { status: "success", data: newUnit };

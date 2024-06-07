@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const SaleItemService = async (req,res) => {
     try {
-        const { items } = req.body; // Assuming the input is an array of items
+        const { items } = req.body;
         console.log("Received items:", items);
 
         for (const item of items) {

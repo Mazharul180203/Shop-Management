@@ -27,6 +27,8 @@ model category {
 model units {
   id              Int      @id @default(autoincrement())
   units_name      String
+  units_label     String
+  relation        Float
   items           items[]
   createdAt       DateTime @default(now()) @db.DateTime
   updatedAt       DateTime @default(now()) @updatedAt @db.DateTime
