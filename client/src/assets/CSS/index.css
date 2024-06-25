@@ -31,3 +31,13 @@
     border-radius: 50%;
     background: rgba(28,17,41,.88);
 }
+
+.menu-bar {
+    height: 88vh;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-size: 1rem;
+    position: relative;
+}
