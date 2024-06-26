@@ -40,8 +40,8 @@
     gap: 15px;
     font-size: 1rem;
     position: relative;
+    overflow-y: auto; /* Ensures the sidebar is scrollable if the content overflows */
 }
-
 .toggle-theme-btn {
     position: absolute;
     bottom: 30px;
@@ -53,5 +53,8 @@
 }
 
 .toggle {
-    margin-left: 15px;
+    position: absolute;
+    top: 20px;
+    left: 250px;
+    z-index: 10;
 }

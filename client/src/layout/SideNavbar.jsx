@@ -37,6 +37,7 @@ const SideNavbar = () => {
                             onClick={() => setCollapsed(!collapsed)}
                             icon={collapsed ? <MenuUnfoldOutlined /> :
                     <MenuFoldOutlined/>}
+                            style={{left: collapsed ? '90px' : '210px'}}
                     />
                 </Header>
             </Layout>

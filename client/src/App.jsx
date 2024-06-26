@@ -1,4 +1,3 @@
-import './assets/CSS/App.css'
 import SideNavbar from "./layout/SideNavbar.jsx";
 
 function App() {
