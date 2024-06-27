@@ -40,15 +40,15 @@ const MenuList = ({darkTheme}) => {
             <Menu.Item key="stockMenu" icon={<AppstoreAddOutlined />}>
                 Stock Menu
             </Menu.Item>
-            {/*<Menu.Item key="saleMenu" icon={<AppstoreAddOutlined />}>*/}
-            {/*    Sale Menu*/}
-            {/*</Menu.Item>*/}
-            {/*<Menu.Item key="dueMenu" icon={<AppstoreAddOutlined />}>*/}
-            {/*    Due Menu*/}
-            {/*</Menu.Item>*/}
-            {/*<Menu.Item key="Ledger" icon={<AppstoreAddOutlined />}>*/}
-            {/*    Ledger*/}
-            {/*</Menu.Item>*/}
+            <Menu.Item key="saleMenu" icon={<AppstoreAddOutlined />}>
+                Sale Menu
+            </Menu.Item>
+            <Menu.Item key="dueMenu" icon={<AppstoreAddOutlined />}>
+                Due Menu
+            </Menu.Item>
+            <Menu.Item key="Ledger" icon={<AppstoreAddOutlined />}>
+                Ledger
+            </Menu.Item>
             <Menu.SubMenu key="subtasks 1" icon={<BarsOutlined />} title="Tasks">
                 <Menu.Item key="task 1"> Task 1</Menu.Item>
                 <Menu.Item key="task 2"> Task 2</Menu.Item>

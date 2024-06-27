@@ -1,10 +1,8 @@
-import SideNavbar from "./layout/SideNavbar.jsx";
+import Webroute from "./routes/webroute.jsx";
 
 function App() {
   return (
-   <SideNavbar>
-
-   </SideNavbar>
+       <Webroute />
   )
 }
 

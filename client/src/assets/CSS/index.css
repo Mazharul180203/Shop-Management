@@ -33,19 +33,17 @@
 }
 
 .menu-bar {
-    height: 88vh;
-    margin-top: 2rem;
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 15px;
     font-size: 1rem;
     position: relative;
     overflow-y: auto; /* Ensures the sidebar is scrollable if the content overflows */
+    flex-grow: 1; /* Allows the menu-bar to grow and fill the available space */
 }
 .toggle-theme-btn {
-    position: absolute;
-    bottom: 30px;
-    left: 20px;
+    margin-top: auto; /* Pushes the button to the bottom */
     display: flex;
     align-items: center;
     justify-content: center;
