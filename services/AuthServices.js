@@ -43,12 +43,12 @@ const VerifyLoginService = async (req) => {
             console.log("userId :",user.id);
             const token = await EncodeToken(email,user.id);
             console.log(token);
-            return { status: "success"};
+            return { status: "success", data: "Login Successfully"};
         } else {
-            return { status: "fail", message: "Invalid email or password" };
+            return { status: "success", data: "Invalid email or password !" };
         }
     } catch (error) {
-        return { status: "fail", message: error.message };
+        return { status: "fail", data: error.message };
     }
 }
 

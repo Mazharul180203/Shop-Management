@@ -34,7 +34,7 @@ const SignupPage = () => {
 
     return (
         <div className="login template d-flex justify-content-center align-items-center vh-100 bg-white">
-            <div className="form_container p-5 border border-dark rounded bg-white">
+            <div className="form_container p-5 border border-dark shadow rounded bg-white">
                 <form onSubmit={handleSubmit}>
                     <h3 className="text-center">Sign Up</h3>
                     <div className="mb-2">
@@ -56,7 +56,7 @@ const SignupPage = () => {
                     <div className="d-grid mt-2">
                         <button type="submit" className="btn btn-primary btn-block form-control mt-2">Register</button>
                     </div>
-                    <Link to="/signin" type="button" className="btn btn-outline-primary btn-block form-control mt-2">Sign In</Link>
+                    <Link to="/" type="button" className="btn btn-outline-primary btn-block form-control mt-2">Sign In</Link>
                 </form>
             </div>
         </div>

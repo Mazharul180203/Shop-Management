@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
-import {SuccessAlert} from "../../utilitiy/AlertUtility.jsx";
+import {FailAlert, SuccessAlert} from "../../utilitiy/AlertUtility.jsx";
 import {BASE_URL} from "../../../../config/config.js";
 
 const LoginForm = () => {
@@ -14,16 +14,23 @@ const LoginForm = () => {
         const password = formData.get('password');
         let res = await axios.post(`${BASE_URL}/api/v1/VerifyLogin`,{email,password})
         if(res.data['status'] === "success"){
-           let response = await SuccessAlert("let's go")
-               if(response){
-                 navigate('/signup')
-               }
+            if(res.data['data'] === "Login Successfully"){
+                let response = await SuccessAlert(res.data['data'])
+                if(response){
+                    navigate('/')
+                }
+            }else{
+                let response = await FailAlert(res.data['data'])
+                if(response){
+                    navigate('/')
+                }
+            }
         }
     };
 
     return (
         <div className="login template d-flex justify-content-center align-items-center vh-100 bg-white">
-            <div className="form_container p-5 border border-dark rounded bg-white">
+            <div className="form_container p-5 border border-dark shadow rounded bg-white">
                 <form onSubmit={handleSubmit}>
                     <h3 className="text-center">Sign In</h3>
                     <div className="mb-2">

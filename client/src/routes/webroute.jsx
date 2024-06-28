@@ -8,8 +8,8 @@ const Webroute = () => {
     return (
         <BrowserRouter >
             <Routes>
+                <Route path="/" element={<SignInPage/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
-                <Route path="/signin" element={<SignInPage/>}/>
             </Routes>
         </BrowserRouter>
     );
