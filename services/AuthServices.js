@@ -29,6 +29,7 @@ const RegistrationService = async (req) =>{
 const VerifyLoginService = async (req) => {
     try {
         const { email, password } = req.body;
+        console.log("fsd",req.body)
         let prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
             where: {
@@ -40,7 +41,7 @@ const VerifyLoginService = async (req) => {
             console.log("userId :",user.id);
             const token = await EncodeToken(email,user.id);
             console.log(token);
-            return { status: "success", token: token };
+            return { status: "success"};
         } else {
             return { status: "fail", message: "Invalid email or password" };
         }

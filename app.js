@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-import helmetCSP from 'helmet-csp';
 import hpp from 'hpp';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -19,7 +18,6 @@ app.use(hpp());
 
 app.use(cookieParser());
 
-app.use(helmetCSP());
 app.use(bodyParser.json())
 
 app.use(express.json({ limit: '500mb' }));
