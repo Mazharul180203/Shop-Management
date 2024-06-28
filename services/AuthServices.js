@@ -1,5 +1,7 @@
 import {PrismaClient} from "@prisma/client";
 import {EncodeToken} from "../utility/TokenHelper.js";
+
+
 const RegistrationService = async (req) =>{
     try {
         let prisma = new PrismaClient();
@@ -10,7 +12,7 @@ const RegistrationService = async (req) =>{
             }
         });
         if (existingUser) {
-            return { status: "fail", data: "User already exists with this email !" };
+            return { status: "success", data: "User already exists with this email !" };
         }
         const newUser = await prisma.user.create({
             data:{
@@ -19,7 +21,7 @@ const RegistrationService = async (req) =>{
                 role:role
             }
         });
-        return { status: "success", data: newUser};
+        return { status: "success", data: "User is registered successfully"};
 
     }catch (e) {
         return { status: "fail", data: e.message };

@@ -1,4 +1,7 @@
 import {RegistrationService, VerifyLoginService} from '../services/AuthServices.js'
+
+
+
 export const Registration = async (req,res) =>{
     let result = await RegistrationService(req);
     if(result['status']==="success"){
