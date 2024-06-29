@@ -7,7 +7,6 @@ import ValidationHelper from "../utilitiy/ValidationUtlity.js";
 
 
 const Webroute = () => {
-    console.log(!ValidationHelper.isLogin())
     if(!ValidationHelper.isLogin()){
         return(
             <BrowserRouter >
