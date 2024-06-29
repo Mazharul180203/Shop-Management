@@ -1,7 +1,10 @@
 import Cookies from "js-cookie";
+
+
 class ValidationHelper{
 
     static isLogin() {
+        console.log("cookies :",Cookies.get('token'))
         return !!Cookies.get('token');
     }
 

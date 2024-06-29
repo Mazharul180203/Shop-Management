@@ -2,15 +2,12 @@ import {DecodeToken} from "../utility/TokenHelper.js";
 
 
 export default (req, res, next) => {
-    let token = req.headers['admin-token'];
-    if (!token) {
-        token = req.cookies['admin-token'];
-    }
+    let token = req.headers['token'] || req.cookies['token'];
 
-    // Token Decode
+    console.log("token middleware :",token);
+
     let decoded = DecodeToken(token);
 
-    // Request Header Email+UserID Add
     if (decoded === null) {
         return res.status(401).json({ status: "fail", message: "Unauthorized" });
     } else {

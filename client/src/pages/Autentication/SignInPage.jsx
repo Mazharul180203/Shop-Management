@@ -12,17 +12,17 @@ const LoginForm = () => {
         const formData = new FormData(event.target);// For demonstration
         const email = formData.get('email');
         const password = formData.get('password');
-        let res = await axios.post(`${BASE_URL}/api/v1/VerifyLogin`,{email,password})
+        let res = await axios.post(`${BASE_URL}/api/v1/VerifyLogin`,{email,password},{withCredentials:true} )
         if(res.data['status'] === "success"){
             if(res.data['data'] === "Login Successfully"){
                 let response = await SuccessAlert(res.data['data'])
                 if(response){
-                    navigate('/')
+                   window.location.reload()
                 }
             }else{
                 let response = await FailAlert(res.data['data'])
                 if(response){
-                    navigate('/')
+                    window.location.reload()
                 }
             }
         }

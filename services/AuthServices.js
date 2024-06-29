@@ -39,11 +39,8 @@ const VerifyLoginService = async (req) => {
             }
         });
         if (user && user.password === password) {
-
-            console.log("userId :",user.id);
             const token = await EncodeToken(email,user.id);
-            console.log(token);
-            return { status: "success", data: "Login Successfully"};
+            return { status: "success", token:token, data: "Login Successfully"};
         } else {
             return { status: "success", data: "Invalid email or password !" };
         }
