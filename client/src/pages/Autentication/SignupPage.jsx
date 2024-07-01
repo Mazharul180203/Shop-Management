@@ -17,14 +17,16 @@ const SignupPage = () => {
             const password = formData.get('password');
             let res = await axios.post(`${BASE_URL}/api/v1/Registration`,{email,password,role:"admin"})
             if(res.data['status'] === "success"){
-                let response=false;
                 if(res.data['data'] === "User is registered successfully"){
-                    response = await SuccessAlert(res.data['data'])
+                    let response = await SuccessAlert(res.data['data'])
+                    if(response){
+                        navigate('/signup')
+                    }
                 }else{
-                    response = await FailAlert(res.data['data'])
-                }
-                if(response){
-                    navigate('/signup')
+                    let response = await FailAlert(res.data['data'])
+                    if(response){
+                        navigate('/signup')
+                    }
                 }
             }
         }catch (e) {

@@ -31,7 +31,6 @@ const RegistrationService = async (req) =>{
 const VerifyLoginService = async (req) => {
     try {
         const { email, password } = req.body;
-        console.log("fsd",req.body)
         let prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
             where: {

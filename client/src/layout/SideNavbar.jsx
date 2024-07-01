@@ -1,22 +1,23 @@
-import React, {useState} from 'react';
-import {Button, Layout, theme} from 'antd'
-import Logo from "./Logo.jsx";
-import MenuList from "./MenuList.jsx";
-import ToggleThemeButton from "./ToggleThemeButton.jsx";
-import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
+import React, { useState } from 'react';
+import { Button, Layout, theme } from 'antd';
+import Logo from './Logo.jsx';
+import MenuList from './MenuList.jsx';
+import ToggleThemeButton from './ToggleThemeButton.jsx';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import ProfileSlider from "./ProfileSlider.jsx";
 
-const {Header,Sider} = Layout
+const { Header, Sider, Content } = Layout;
 
-const SideNavbar = () => {
-    const [darkTheme,setDarkTheme] = useState(true);
-    const [collapsed,setCollapsed] = useState(false)
+const SideNavbar = ({ children }) => {
+    const [darkTheme, setDarkTheme] = useState(true);
+    const [collapsed, setCollapsed] = useState(false);
 
     const toggleTheme = () => {
-        setDarkTheme(!darkTheme)
-    }
+        setDarkTheme(!darkTheme);
+    };
 
     const {
-        token: {colorBgContainer},
+        token: { colorBgContainer },
     } = theme.useToken();
 
     return (
@@ -25,21 +26,36 @@ const SideNavbar = () => {
                 collapsed={collapsed}
                 collapsible
                 trigger={null}
-                theme={darkTheme ? 'dark' : 'light'} className="sidebar">
+                theme={darkTheme ? 'dark' : 'light'}
+                className="sidebar"
+            >
                 <Logo />
-                <MenuList darkTheme = {darkTheme}/>
-                <ToggleThemeButton darkTheme={darkTheme}
-                toggleTheme={toggleTheme}/>
+                <MenuList darkTheme={darkTheme} />
+                <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
             </Sider>
             <Layout>
-                <Header style={{padding:0,background:colorBgContainer}}>
-                    <Button type='text' className="toggle"
-                            onClick={() => setCollapsed(!collapsed)}
-                            icon={collapsed ? <MenuUnfoldOutlined /> :
-                    <MenuFoldOutlined/>}
-                            style={{left: collapsed ? '90px' : '210px'}}
+                <Header style={{
+                    padding: 0,
+                    background: colorBgContainer,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <Button
+                        type="text"
+                        className="toggle"
+                        onClick={() => setCollapsed(!collapsed)}
+                        icon={collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
+                        style={{left: collapsed ? '90px' : '210px'}}
                     />
+                    <div className="profile-container">
+                        <ProfileSlider/>
+                    </div>
+
                 </Header>
+                <Content>
+                    {children}
+                </Content>
             </Layout>
         </Layout>
     );
