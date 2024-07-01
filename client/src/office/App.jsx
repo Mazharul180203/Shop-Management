@@ -12,8 +12,8 @@ const App = () => {
 
     return (
         <div className="container-fluid">
-            <h3 className="text-center">My Name is Saurav</h3>
-            <div className="row justify-content-center">
+            <h3 className="text-center">IDLC</h3>
+            <div className="row justify-content-start">
                 <div className="col-sm-4 col-md-2 mb-4">
                     <button
                         className={`box ${selectedBox === 1 ? 'selected' : ''}`}
