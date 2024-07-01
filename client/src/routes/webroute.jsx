@@ -4,6 +4,7 @@ import SignupPage from "../pages/Autentication/SignupPage.jsx";
 import SignInPage from "../pages/Autentication/SignInPage.jsx";
 import DashboardPage from "../pages/Dashboard/DashboardPage.jsx";
 import ValidationHelper from "../utilitiy/ValidationUtlity.js";
+import CategoryPage from "../pages/Categoty/CategoryPage.jsx";
 
 
 const Webroute = () => {
@@ -22,6 +23,7 @@ const Webroute = () => {
             <BrowserRouter >
                 <Routes>
                     <Route path="/" element={<DashboardPage/>}/>
+                    <Route path="/category" element={<CategoryPage/>}/>
                 </Routes>
             </BrowserRouter>
             )

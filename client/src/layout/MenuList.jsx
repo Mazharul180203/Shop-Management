@@ -1,5 +1,6 @@
 import React from 'react';
 import{ Menu } from 'antd';
+import {NavLink} from "react-router-dom";
 import {
     AppstoreAddOutlined,
     AreaChartOutlined, BarsOutlined,
@@ -7,11 +8,16 @@ import {
     PayCircleOutlined,
     SettingOutlined
 } from '@ant-design/icons';
+
+
 const MenuList = ({darkTheme}) => {
     return (
         <Menu theme={darkTheme ? 'dark' : 'light'} mode="inline" className='menu-bar'>
+            <Menu.Item key="dashboard" icon={<HomeOutlined />}>
+                <NavLink to="/" className={({ isActive }) => isActive ? "active-link" : ""}>Dashboard</NavLink>
+            </Menu.Item>
             <Menu.Item key="category" icon={<HomeOutlined />}>
-                Category
+                <NavLink to="/category" className={({ isActive }) => isActive ? "active-link" : ""}>Category</NavLink>
             </Menu.Item>
             <Menu.Item key="subcategory" icon={<AppstoreAddOutlined />}>
                 Subcategory

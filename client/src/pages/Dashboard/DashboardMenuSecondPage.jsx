@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button} from "antd";
 import {HomeOutlined} from "@ant-design/icons";
 
-const DashboardMenuSecond = () => {
+const DashboardMenuSecondPage = () => {
     const [selectedBox, setSelectedBox] = useState(null);
 
     const handleClick = (boxNumber) => {
@@ -55,4 +55,4 @@ const DashboardMenuSecond = () => {
     );
 };
 
-export default DashboardMenuSecond;
+export default DashboardMenuSecondPage;

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 
-const DashboardMenuFirst = () => {
+const DashboardMenuFirstPage = () => {
     const [selectedBox, setSelectedBox] = useState(null);
 
     const handleClick = (boxNumber) => {
@@ -73,4 +73,4 @@ const DashboardMenuFirst = () => {
     );
 };
 
-export default DashboardMenuFirst;
+export default DashboardMenuFirstPage;
