@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Directory from "../CommonDirectory/Directory.jsx";
 
 
 const DashboardMenuFirstPage = () => {
@@ -7,69 +8,34 @@ const DashboardMenuFirstPage = () => {
     const handleClick = (boxNumber) => {
         setSelectedBox(boxNumber);
     };
+    let data = [
+        {
+            to:'/',
+            text:"Purchase Menu"
+        },
+        {
+            to:'/',
+            text:"Supply Payment"
+        },
+        {
+            to:'/',
+            text:"Stock Menu"
+        },
+        {
+            to:'/',
+            text:"Customer Collection"
+        },
+        {
+            to:'/',
+            text:"Expenditure"
+        },
+        {
+            to:'/',
+            text:"Daily sheet"
+        },
+    ]
     return (
-        <div className="container-fluid">
-            <div className="row justify-content-start mt-4" style={{marginRight: '100px'}}>
-                <div className="col-sm-4 col-md-2 mb-4">
-                    <button
-                        className={`box ${selectedBox === 2 ? 'selected' : ''}`}
-                        onClick={() => handleClick(2)}
-                    >
-                        Purchase Menu
-                    </button>
-                </div>
-                <div className="col-sm-4 col-md-2 mb-4">
-                    <button
-                        className={`box ${selectedBox === 2 ? 'selected' : ''}`}
-                        onClick={() => handleClick(2)}
-                    >
-                        Supply Payment
-                    </button>
-                </div>
-                <div className="col-sm-4 col-md-2 mb-4">
-                    <button
-                        className={`box ${selectedBox === 2 ? 'selected' : ''}`}
-                        onClick={() => handleClick(2)}
-
-                    >
-                        Stock Menu
-                    </button>
-                </div>
-                <div className=" col-sm-4 col-md-2 mb-4">
-                    <button
-                        className={`box ${selectedBox === 4 ? 'selected' : ''}`}
-                        onClick={() => handleClick(4)}
-                    >
-                        Sales Menu
-                    </button>
-                </div>
-                <div className=" col-sm-4 col-md-2 mb-4">
-                    <button
-                        className={`box ${selectedBox === 5 ? 'selected' : ''}`}
-                        onClick={() => handleClick(5)}
-                    >
-                        Customer Collection
-                    </button>
-                </div>
-                <div className=" col-sm-4 col-md-2 mb-4">
-                    <button
-                        className={`box ${selectedBox === 5 ? 'selected' : ''}`}
-                        onClick={() => handleClick(5)}
-                    >
-                        Expenditure
-                    </button>
-                </div>
-                <div className=" col-sm-4 col-md-2 mb-4">
-                    <button
-                        className={`box ${selectedBox === 5 ? 'selected' : ''}`}
-                        onClick={() => handleClick(5)}
-                    >
-                        Daily Sheet
-                    </button>
-                </div>
-            </div>
-
-        </div>
+        <Directory pages={data}/>
     );
 };
 
