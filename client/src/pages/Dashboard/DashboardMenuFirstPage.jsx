@@ -1,25 +1,21 @@
-import { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './assets/CSS/index.css';
-import SecondApp from "../src/secondApp.jsx";
+import React, {useState} from 'react';
 
-const App = () => {
+
+const DashboardMenuFirstPage = () => {
     const [selectedBox, setSelectedBox] = useState(null);
 
     const handleClick = (boxNumber) => {
         setSelectedBox(boxNumber);
     };
-
     return (
         <div className="container-fluid">
-            <h3 className="text-center">IDLC</h3>
-            <div className="row justify-content-start">
+            <div className="row justify-content-start mt-4" style={{marginRight: '100px'}}>
                 <div className="col-sm-4 col-md-2 mb-4">
                     <button
-                        className={`box ${selectedBox === 1 ? 'selected' : ''}`}
-                        onClick={() => handleClick(1)}
+                        className={`box ${selectedBox === 2 ? 'selected' : ''}`}
+                        onClick={() => handleClick(2)}
                     >
-                        Box 1
+                        Purchase Menu
                     </button>
                 </div>
                 <div className="col-sm-4 col-md-2 mb-4">
@@ -27,16 +23,16 @@ const App = () => {
                         className={`box ${selectedBox === 2 ? 'selected' : ''}`}
                         onClick={() => handleClick(2)}
                     >
-                        Box 2
+                        Supply Payment
                     </button>
                 </div>
                 <div className="col-sm-4 col-md-2 mb-4">
                     <button
-                        className={`box ${selectedBox === 3 ? 'selected' : ''}`}
-                        onClick={() => handleClick(3)}
+                        className={`box ${selectedBox === 2 ? 'selected' : ''}`}
+                        onClick={() => handleClick(2)}
 
                     >
-                        Box 3
+                        Stock Menu
                     </button>
                 </div>
                 <div className=" col-sm-4 col-md-2 mb-4">
@@ -44,7 +40,7 @@ const App = () => {
                         className={`box ${selectedBox === 4 ? 'selected' : ''}`}
                         onClick={() => handleClick(4)}
                     >
-                        Box 4
+                        Sales Menu
                     </button>
                 </div>
                 <div className=" col-sm-4 col-md-2 mb-4">
@@ -52,13 +48,29 @@ const App = () => {
                         className={`box ${selectedBox === 5 ? 'selected' : ''}`}
                         onClick={() => handleClick(5)}
                     >
-                        Box 5
+                        Customer Collection
+                    </button>
+                </div>
+                <div className=" col-sm-4 col-md-2 mb-4">
+                    <button
+                        className={`box ${selectedBox === 5 ? 'selected' : ''}`}
+                        onClick={() => handleClick(5)}
+                    >
+                        Expenditure
+                    </button>
+                </div>
+                <div className=" col-sm-4 col-md-2 mb-4">
+                    <button
+                        className={`box ${selectedBox === 5 ? 'selected' : ''}`}
+                        onClick={() => handleClick(5)}
+                    >
+                        Daily Sheet
                     </button>
                 </div>
             </div>
-            <SecondApp/>
+
         </div>
     );
 };
 
-export default App;
+export default DashboardMenuFirstPage;
