@@ -4,6 +4,8 @@ import SignupPage from "../pages/Autentication/SignupPage.jsx";
 import SignInPage from "../pages/Autentication/SignInPage.jsx";
 import DashboardPage from "../pages/Dashboard/DashboardPage.jsx";
 import ValidationHelper from "../utilitiy/ValidationUtlity.js";
+import AddNewCategory from "../components/Categoty/AddNewCategory.jsx";
+import ViewAllCategory from "../components/Categoty/ViewAllCategory.jsx";
 import CategoryPage from "../pages/Categoty/CategoryPage.jsx";
 
 
@@ -24,6 +26,8 @@ const Webroute = () => {
                 <Routes>
                     <Route path="/" element={<DashboardPage/>}/>
                     <Route path="/category" element={<CategoryPage/>}/>
+                    <Route path="/category/addNew" element={<AddNewCategory/>}/>
+                    <Route path="/category/viewAll" element={<ViewAllCategory/>}/>
                 </Routes>
             </BrowserRouter>
             )

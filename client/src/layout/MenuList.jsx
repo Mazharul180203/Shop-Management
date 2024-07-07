@@ -16,9 +16,16 @@ const MenuList = ({darkTheme}) => {
             <Menu.Item key="dashboard" icon={<HomeOutlined />}>
                 <NavLink to="/" className={({ isActive }) => isActive ? "active-link" : ""}>Dashboard</NavLink>
             </Menu.Item>
-            <Menu.Item key="category" icon={<HomeOutlined />}>
-                <NavLink to="/category" className={({ isActive }) => isActive ? "active-link" : ""}>Category</NavLink>
-            </Menu.Item>
+
+            <Menu.SubMenu key="category" icon={<BarsOutlined />} title="Category">
+                <Menu.Item key="all_new">
+                    <NavLink to="/category/addNew" className={({ isActive }) => isActive ? "active-link" : ""}>All New</NavLink>
+                </Menu.Item>
+                <Menu.Item key="task 2">
+                    <NavLink to="/category/viewAll" className={({ isActive }) => isActive ? "active-link" : ""}>View All</NavLink>
+                </Menu.Item>
+            </Menu.SubMenu>
+
             <Menu.Item key="subcategory" icon={<AppstoreAddOutlined />}>
                 Subcategory
             </Menu.Item>

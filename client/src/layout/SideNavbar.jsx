@@ -5,6 +5,7 @@ import MenuList from './MenuList.jsx';
 import ToggleThemeButton from './ToggleThemeButton.jsx';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import ProfileSlider from "./ProfileSlider.jsx";
+import {Toaster} from "react-hot-toast";
 
 const { Header, Sider, Content } = Layout;
 
@@ -53,6 +54,7 @@ const SideNavbar = ({ children }) => {
                     </div>
 
                 </Header>
+                <Toaster position="bottom-center"/>
                 <Content>
                     {children}
                 </Content>
