@@ -25,13 +25,14 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/category/viewAll" className={({ isActive }) => isActive ? "active-link" : ""}>View All</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-
-            <Menu.Item key="subcategory" icon={<AppstoreAddOutlined />}>
-                Subcategory
-            </Menu.Item>
-            <Menu.Item key="brand" icon={<AppstoreAddOutlined />}>
-                Brand
-            </Menu.Item>
+            <Menu.SubMenu key="brand" icon={<BarsOutlined />} title="Brand">
+                <Menu.Item key="all_new">
+                    <NavLink to="/brand/addNew" className={({ isActive }) => isActive ? "active-link" : ""}>All New</NavLink>
+                </Menu.Item>
+                <Menu.Item key="task 2">
+                    <NavLink to="/brand/viewAll" className={({ isActive }) => isActive ? "active-link" : ""}>View All</NavLink>
+                </Menu.Item>
+            </Menu.SubMenu>
             <Menu.Item key="unitMenu" icon={<AppstoreAddOutlined />}>
                 Unit Menu
             </Menu.Item>

@@ -7,6 +7,9 @@ import ValidationHelper from "../utilitiy/ValidationUtlity.js";
 import AddNewCategory from "../components/Categoty/AddNewCategory.jsx";
 import ViewAllCategory from "../components/Categoty/ViewAllCategory.jsx";
 import CategoryPage from "../pages/Categoty/CategoryPage.jsx";
+import BrandPage from "../pages/Brand/BrandPage.jsx";
+import AddNewBrand from "../components/Brand/AddNewBrand.jsx";
+import ViewAllBrand from "../components/Brand/ViewAllBrand.jsx";
 
 
 const Webroute = () => {
@@ -28,6 +31,9 @@ const Webroute = () => {
                     <Route path="/category" element={<CategoryPage/>}/>
                     <Route path="/category/addNew" element={<AddNewCategory/>}/>
                     <Route path="/category/viewAll" element={<ViewAllCategory/>}/>
+                    <Route path="/brand" element={<BrandPage/>}/>
+                    <Route path="/brand/addNew" element={<AddNewBrand/>}/>
+                    <Route path="/brand/viewAll" element={<ViewAllBrand/>}/>
                 </Routes>
             </BrowserRouter>
             )

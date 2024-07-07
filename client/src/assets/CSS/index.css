@@ -109,7 +109,8 @@
 /* AddNewCategoryPage.css */
 
 .form-container {
-    width: 900px;
+    width: 96%;
+    max-width: 980px;
     margin: 0 auto;
     padding: 30px;
     border: 1px solid #ccc;
@@ -119,9 +120,15 @@
 }
 
 .form-label {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 1.2rem;
     margin-bottom: 10px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .input-field {
@@ -134,7 +141,6 @@
 }
 
 .submit-button {
-    width: 150px; /* Adjust width as needed */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,9 +148,21 @@
     font-size: 16px;
     border-radius: 4px;
 }
-.form-row {
-    display: flex;
-    align-items: center;
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-field {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .submit-button {
+        width: 100%;
+    }
 }
 
 
