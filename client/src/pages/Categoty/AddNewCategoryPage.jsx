@@ -42,7 +42,7 @@ const AddNewCategoryPage = () => {
     return (
         <Form onSubmit={handleSubmit} className="form-container">
             <Form.Group controlId="formCategory">
-                <Form.Label className="form-label">Add Category</Form.Label>
+                <Form.Label className="form-label">Add New Category</Form.Label>
                 <div className="form-row">
                     <Input name="category" placeholder="Add new category" className="input-field" value={category}
                         onChange={handleInputChange}

@@ -8,28 +8,26 @@ import ValidationHelper from "../../utilitiy/ValidationUtlity.js";
 
 const AddNewBrandPage = () => {
     const [loading, setLoading] = useState(false);
-    const [brand, setBrand] = useState('');
+    const [formData, setFormData] = useState({brand: ''});
 
     const handleInputChange = (e) => {
-        setBrand(e.target.value);
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true);
-
-        if (ValidationHelper.isEmpty(brand)) {
-            toast.error("Enter the brand !");
-            setLoading(false);
-            return;
-        }
-
         try {
-            let res = await axios.post(`${BASE_URL}/api/v1/brands`, { brands_name: brand }, { withCredentials: true });
-
-            if (res.data['status'] === 'success') {
-                toast.success("Brand is added successfully !");
-                setBrand('');
+            setLoading(true);
+            const { brand } = formData;
+            if (ValidationHelper.isEmpty(brand)) {
+                toast.error("Enter the Brand !");
+            }else{
+                let res = await axios.post(`${BASE_URL}/api/v1/brands`, { brands_name: brand }, { withCredentials: true });
+                if (res.data['status'] === 'success') {
+                    toast.success("Brand is added successfully !");
+                    setFormData({ brand: '' });
+                }
             }
         } catch (error) {
             console.error("Error submitting form", error);
@@ -39,13 +37,14 @@ const AddNewBrandPage = () => {
         }
     };
 
+
     return (
         <Form onSubmit={handleSubmit} className="form-container">
-            <Form.Group controlId="formCategory">
-                <Form.Label className="form-label">Add Brand</Form.Label>
+            <Form.Group controlId="formBrand">
+                <Form.Label className="form-label">Add New Brand</Form.Label>
                 <div className="form-row">
-                    <Input name="brand" placeholder="Add new brand" className="input-field" value={brand}
-                        onChange={handleInputChange}
+                    <Input name="brand" placeholder="Add new brand" className="input-field" value={formData.brand}
+                           onChange={handleInputChange}
                     />
                     <Button type="submit" variant="primary" className="submit-button" disabled={loading}>
                         {loading ? <Spin /> : 'Add'}
