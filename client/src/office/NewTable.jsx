@@ -9,72 +9,85 @@ const data = [
         name: 'John Brown',
         age: 32,
         address: 'New York No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '2',
         name: 'Joe Black',
         age: 42,
         address: 'London No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '3',
         name: 'Jim Green',
         age: 32,
         address: 'Sydney No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '4',
         name: 'Jim Red',
         age: 32,
         address: 'London No. 2 Lake Park',
+        role:'admin'
     },
     {
         key: '51',
         name: 'John Brown',
         age: 32,
         address: 'New York No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '6',
         name: 'Joe Black',
         age: 42,
         address: 'London No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '7',
         name: 'Jim Green',
         age: 32,
         address: 'Sydney No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '8',
         name: 'Jim Red',
         age: 32,
         address: 'London No. 2 Lake Park',
+        role:'admin'
     },
     {
         key: '9',
         name: 'John Brown',
         age: 32,
         address: 'New York No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '10',
         name: 'Joe Black',
         age: 42,
         address: 'London No. 1 Lake Park',
+        role:'admin'
     },
     {
         key: '11',
         name: 'Jim Green',
         age: 32,
         address: 'Sydney No. 1 Lake Park',
+        role:'admin'
+
     },
     {
         key: '12',
         name: 'Jim Red',
         age: 32,
         address: 'London No. 2 Lake Park',
+        role:'admin'
     },
 ];
 
@@ -187,6 +200,13 @@ const NewTable = () => {
             ...getColumnSearchProps('age'),
         },
         {
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+            width: '20%',
+            ...getColumnSearchProps('role'),
+        },
+        {
             title: 'Address',
             dataIndex: 'address',
             key: 'address',
@@ -196,7 +216,7 @@ const NewTable = () => {
         },
     ];
 
-    return <Table columns={columns} dataSource={data} />;
+    return <Table columns={columns} dataSource={data}  pagination={{ pageSize: 10 }} />;
 };
 
 export default NewTable;
