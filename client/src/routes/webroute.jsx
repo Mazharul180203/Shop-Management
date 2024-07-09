@@ -10,6 +10,9 @@ import CategoryPage from "../pages/Categoty/CategoryPage.jsx";
 import BrandPage from "../pages/Brand/BrandPage.jsx";
 import AddNewBrand from "../components/Brand/AddNewBrand.jsx";
 import ViewAllBrand from "../components/Brand/ViewAllBrand.jsx";
+import ProductPage from "../pages/Product/ProductPage.jsx";
+import AddNewProduct from "../components/Product/AddNewProduct.jsx";
+import ViewAllProduct from "../components/Product/ViewAllProduct.jsx";
 
 
 const Webroute = () => {
@@ -34,6 +37,9 @@ const Webroute = () => {
                     <Route path="/brand" element={<BrandPage/>}/>
                     <Route path="/brand/addNew" element={<AddNewBrand/>}/>
                     <Route path="/brand/viewAll" element={<ViewAllBrand/>}/>
+                    <Route path="/product" element={<ProductPage/>}/>
+                    <Route path="/product/addProduct" element={<AddNewProduct/>}/>
+                    <Route path="/product/allProduct" element={<ViewAllProduct/>}/>
                 </Routes>
             </BrowserRouter>
             )
