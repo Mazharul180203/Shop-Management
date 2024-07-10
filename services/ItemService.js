@@ -263,6 +263,50 @@ const CustomerService = async (req) => {
     }
 }
 
+const DropdownService = async (req) => {
+    const prisma = new PrismaClient();
+    try {
+        const { type } = req.params; // Extract type from req.params
+        let data, typeName;
 
+        if (type === "category") {
+            data = await prisma.category.findMany({
+                select: {
+                    id: true,
+                    category_name: true,
+                }
+            });
+            typeName = 'categories';
+        } else if (type === "brands") {
+            data = await prisma.brands.findMany({
+                select: {
+                    id: true,
+                    brands_name: true,
+                }
+            });
+            typeName = 'brands';
+        } else if (type === "unit") {
+            data = await prisma.units.findMany({
+                select: {
+                    id: true,
+                    units_name: true,
+                    units_label: true,
+                    relation: true,
+                }
+            });
+            typeName = 'units';
+        } else {
+            return { status: "fail", data: "Invalid type parameter" };
+        }
 
-export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService,PurchaseSupplierTrackerService}
+        return { status: "success", type: typeName, data: data };
+
+    } catch (e) {
+        console.error(e);
+        return { status: "fail", data: e.message };
+    } finally {
+        await prisma.$disconnect();
+    }
+};
+
+export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService,PurchaseSupplierTrackerService,DropdownService}

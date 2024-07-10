@@ -27,6 +27,7 @@ router.post('/purchaseitems',AuthVarification,ItemController.purchaseitems)
 router.post('/customertype',AuthVarification,ItemController.customertype)
 router.post('/customer',AuthVarification,ItemController.customer)
 router.post('/purchasesuppliertracker',AuthVarification,ItemController.purchasesuppliertracker)
+router.get('/dropdown/:type',AuthVarification,ItemController.dropdown)
 
 //stock
 router.get('/itemstock',AuthVarification,ItemStockController.itemstock)

@@ -7,7 +7,8 @@ import {
     SupplierService,
     CustomertypeService,
     CustomerService,
-    PurchaseSupplierTrackerService
+    PurchaseSupplierTrackerService,
+    DropdownService
 } from "../services/ItemService.js";
 
 export const category =  async (req,res) =>{
@@ -79,6 +80,15 @@ export const  customertype =  async (req,res) =>{
 }
 export const customer =  async (req,res) =>{
     let result = await CustomerService(req);
+    if(result['status']==="success"){
+        return res.status(200).json(result);
+    }else {
+        return res.status(401).json(result);
+    }
+}
+
+export const dropdown = async (res,req) => {
+    let result = await DropdownService(req);
     if(result['status']==="success"){
         return res.status(200).json(result);
     }else {
