@@ -12,21 +12,19 @@ const LoginForm = () => {
         const formData = new FormData(event.target);// For demonstration
         const email = formData.get('email');
         const password = formData.get('password');
-        let res = await axios.post(`${BASE_URL}/api/v1/VerifyLogin`,{email,password},{withCredentials:true} )
+        let res = await axios.post(`${BASE_URL}/api/v1/VerifyLogin`,{email,password},{withCredentials:true})
+
         if(res.data['status'] === "success"){
-            if(res.data['data'] === "Login Successfully"){
+            if(res.data['data'] === "Login Successfully") {
                 let response = await SuccessAlert(res.data['data'])
-                if(response){
-                   window.location.reload()
-                }
-            }else{
-                let response = await FailAlert(res.data['data'])
-                if(response){
+                if (response) {
                     window.location.reload()
                 }
             }
+        }else if(res.data['status'] === "invalid"){
+                await FailAlert(res.data['data'])
+            }
         }
-    };
 
     return (
         <div className="login template d-flex justify-content-center align-items-center vh-100 bg-white">
