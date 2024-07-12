@@ -87,7 +87,7 @@ export const customer =  async (req,res) =>{
     }
 }
 
-export const dropdown = async (res,req) => {
+export const dropdown =  async (req,res) =>{
     let result = await DropdownService(req);
     if(result['status']==="success"){
         return res.status(200).json(result);

@@ -250,6 +250,7 @@ const CustomerService = async (req) => {
     try {
         const prisma = new PrismaClient();
         const { customer_name,customertypeId } = req.body;
+        console.log(r)
         const Customer = await prisma.customer.create({
             data: {
                 customer_name: customer_name,
@@ -265,8 +266,9 @@ const CustomerService = async (req) => {
 
 const DropdownService = async (req) => {
     const prisma = new PrismaClient();
+    const {type} = req.params;
+    console.log( req.params)
     try {
-        const { type } = req.params; // Extract type from req.params
         let data, typeName;
 
         if (type === "category") {
@@ -276,7 +278,7 @@ const DropdownService = async (req) => {
                     category_name: true,
                 }
             });
-            typeName = 'categories';
+            typeName = 'category';
         } else if (type === "brands") {
             data = await prisma.brands.findMany({
                 select: {
@@ -294,7 +296,7 @@ const DropdownService = async (req) => {
                     relation: true,
                 }
             });
-            typeName = 'units';
+            typeName = 'unit';
         } else {
             return { status: "fail", data: "Invalid type parameter" };
         }
@@ -304,9 +306,9 @@ const DropdownService = async (req) => {
     } catch (e) {
         console.error(e);
         return { status: "fail", data: e.message };
-    } finally {
-        await prisma.$disconnect();
     }
+
 };
+
 
 export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService,PurchaseSupplierTrackerService,DropdownService}

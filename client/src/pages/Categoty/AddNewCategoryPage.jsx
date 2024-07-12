@@ -40,7 +40,7 @@ const AddNewCategoryPage = () => {
     };
 
     return (
-        <Form onSubmit={handleSubmit} className="form-container">
+        <Form onSubmit={handleSubmit} className="product-form-container">
             <Form.Group controlId="formCategory">
                 <Form.Label className="form-label">Add New Category</Form.Label>
                 <div className="form-row">

@@ -39,7 +39,7 @@ const AddNewBrandPage = () => {
 
 
     return (
-        <Form onSubmit={handleSubmit} className="form-container">
+        <Form onSubmit={handleSubmit} className="product-form-container">
             <Form.Group controlId="formBrand">
                 <Form.Label className="form-label">Add New Brand</Form.Label>
                 <div className="form-row">

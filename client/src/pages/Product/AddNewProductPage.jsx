@@ -3,11 +3,15 @@ import { Form, Input, Select, Button, Spin } from 'antd';
 import toast from 'react-hot-toast';
 import ValidationHelper from "../../utilitiy/ValidationUtlity.js";
 import axios from "axios";
+import {BASE_URL} from "../../../../config/config.js";
 
 const { Option } = Select;
 
 const ProductForm = () => {
     const [loading, setLoading] = useState(false);
+    const [categoryList,setCategoryList] = useState([]);
+    const [brandList,setBrandList] = useState([]);
+    const [unitList,setUnitList] = useState([]);
     const [formData, setFormData] = useState({
         productName: '',
         productCategory: '',
@@ -24,17 +28,22 @@ const ProductForm = () => {
     const getData = async () => {
         setLoading(true);
         try {
-            let categoryres = await axios.get(`/api/v1/category`);
-            let brandres = await axios.get(`/api/v1/brands`);
-            let unitres = await axios.get(`/api/v1/units`);
-
+            const [categoryResponse, brandsResponse, unitsResponse] = await Promise.all([
+                axios.get(`${BASE_URL}/api/v1/dropdown/category`, { withCredentials: true }),
+                axios.get(`${BASE_URL}/api/v1/dropdown/brands`, { withCredentials: true }),
+                axios.get(`${BASE_URL}/api/v1/dropdown/unit`, { withCredentials: true })
+            ]);
+            setCategoryList(categoryResponse.data.data);
+            setBrandList(brandsResponse.data.data);
+            setUnitList(unitsResponse.data.data);
         } catch (error) {
             console.error("Error fetching data", error);
             toast.error("Error fetching data");
         } finally {
             setLoading(false);
         }
-    }
+    };
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -56,24 +65,37 @@ const ProductForm = () => {
         try {
             if (ValidationHelper.isEmpty(formData.productName)) {
                 toast.error("Product Name is required");
-                return;
             }
             if (ValidationHelper.isEmpty(formData.productCategory)) {
                 toast.error("Product Category is required");
-                return;
             }
             if (ValidationHelper.isEmpty(formData.brand)) {
                 toast.error("Brand is required");
-                return;
             }
             if (ValidationHelper.isEmpty(formData.unit)) {
                 toast.error("Unit is required");
-                return;
-            }
+            }else {
+                setLoading(true);
+                let res = await axios.post(`${BASE_URL}/api/v1/items`, {
+                    items_name: formData.productName,
+                    categoryId: formData.productCategory,
+                    description: "will modify",
+                    brandsId: formData.brand,
+                    unitsId: formData.unit,
+                }, {withCredentials: true});
 
-            setLoading(true);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            toast.success("Product saved successfully");
+                if (res.data['status'] === "success") {
+                    toast.success("Product added Successfully!")
+                    setFormData({
+                        ...formData,
+                        productName: '',
+                        productCategory: '',
+                        brand: '',
+                        unit: ''
+                    })
+
+                }
+            }
         } catch (error) {
             console.error("Error submitting form", error);
             toast.error("Error submitting form");
@@ -98,8 +120,12 @@ const ProductForm = () => {
                                 <Select name="productCategory" value={formData.productCategory}
                                         onChange={(value) => handleSelectChange('productCategory', value)}
                                         placeholder="Select Category">
-                                    <Option value="category1">Category 1</Option>
-                                    <Option value="category2">Category 2</Option>
+                                    <Option value="">Select the category</Option>
+                                    {
+                                        categoryList?.map((item,i) => (
+                                            <option key={item?.id} value={item?.id}>{item?.category_name}</option>
+                                        ))
+                                    }
                                 </Select>
                             </Form.Item>
                         </div>
@@ -109,8 +135,12 @@ const ProductForm = () => {
                             <Form.Item label="Brand">
                                 <Select name="brand" value={formData.brand} onChange={(value) => handleSelectChange('brand', value)}
                                         placeholder="Select Brand">
-                                    <Option value="brand1">Brand 1</Option>
-                                    <Option value="brand2">Brand 2</Option>
+                                    <Option value="">Select the brand</Option>
+                                    {
+                                        brandList?.map((item,i) => (
+                                            <option key={item?.id} value={item?.id}>{item?.brands_name}</option>
+                                        ))
+                                    }
                                 </Select>
                             </Form.Item>
                         </div>
@@ -119,8 +149,12 @@ const ProductForm = () => {
                                 <Select name="unit" value={formData.unit}
                                         onChange={(value) => handleSelectChange('unit', value)}
                                         placeholder="Select Unit">
-                                    <Option value="unit1">Unit 1</Option>
-                                    <Option value="unit2">Unit 2</Option>
+                                    <Option value="">Select the unit</Option>
+                                    {
+                                        unitList?.map((item,i) => (
+                                            <option key={item?.id} value={item?.id}>{item?.units_name}</option>
+                                        ))
+                                    }
                                 </Select>
                             </Form.Item>
                         </div>
