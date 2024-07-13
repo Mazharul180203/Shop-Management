@@ -61,18 +61,17 @@ const ProductForm = () => {
     };
 
     const handleSubmit = async () => {
-        console.log("formData :", formData);
         try {
             if (ValidationHelper.isEmpty(formData.productName)) {
                 toast.error("Product Name is required");
             }
-            if (ValidationHelper.isEmpty(formData.productCategory)) {
+            else if (ValidationHelper.isEmpty(formData.productCategory)) {
                 toast.error("Product Category is required");
             }
-            if (ValidationHelper.isEmpty(formData.brand)) {
+            else if (ValidationHelper.isEmpty(formData.brand)) {
                 toast.error("Brand is required");
             }
-            if (ValidationHelper.isEmpty(formData.unit)) {
+            else if (ValidationHelper.isEmpty(formData.unit)) {
                 toast.error("Unit is required");
             }else {
                 setLoading(true);

@@ -13,6 +13,11 @@ import ViewAllBrand from "../components/Brand/ViewAllBrand.jsx";
 import ProductPage from "../pages/Product/ProductPage.jsx";
 import AddNewProduct from "../components/Product/AddNewProduct.jsx";
 import ViewAllProduct from "../components/Product/ViewAllProduct.jsx";
+import SupplierPage from "../pages/Supplier/SupplierPage.jsx";
+import AddSupplier from "../components/Suppier/AddSupplier.jsx";
+import AllSupplier from "../components/Suppier/AllSupplier.jsx";
+import AddTransaction from "../components/Suppier/AddTransaction.jsx";
+import AllTransaction from "../components/Suppier/AllTransaction.jsx";
 
 
 const Webroute = () => {
@@ -40,6 +45,11 @@ const Webroute = () => {
                     <Route path="/product" element={<ProductPage/>}/>
                     <Route path="/product/addProduct" element={<AddNewProduct/>}/>
                     <Route path="/product/allProduct" element={<ViewAllProduct/>}/>
+                    <Route path="/supplier" element={<SupplierPage/>}/>
+                    <Route path="/supplier/addSupplier" element={<AddSupplier/>}/>
+                    <Route path="/supplier/allSupplier" element={<AllSupplier/>}/>
+                    <Route path="/supplier/addTransaction" element={<AddTransaction/>}/>
+                    <Route path="/supplier/allTransaction" element={<AllTransaction/>}/>
                 </Routes>
             </BrowserRouter>
             )
