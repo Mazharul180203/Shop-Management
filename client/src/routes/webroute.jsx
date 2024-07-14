@@ -18,6 +18,9 @@ import AddSupplier from "../components/Suppier/AddSupplier.jsx";
 import AllSupplier from "../components/Suppier/AllSupplier.jsx";
 import AddTransaction from "../components/Suppier/AddTransaction.jsx";
 import AllTransaction from "../components/Suppier/AllTransaction.jsx";
+import PurchaseItems from "../pages/PurchaseItems/PurchaseItems.jsx";
+import AddNewPurchase from "../components/PurchaseItems/AddNewPurchase.jsx";
+import AllPurchase from "../components/PurchaseItems/AllPurchase.jsx";
 
 
 const Webroute = () => {
@@ -50,6 +53,9 @@ const Webroute = () => {
                     <Route path="/supplier/allSupplier" element={<AllSupplier/>}/>
                     <Route path="/supplier/addTransaction" element={<AddTransaction/>}/>
                     <Route path="/supplier/allTransaction" element={<AllTransaction/>}/>
+                    <Route path="/purchaseitems" element={<PurchaseItems/>}/>
+                    <Route path="/purchaseitems/newPurchase" element={<AddNewPurchase/>}/>
+                    <Route path="/purchaseitems/allPurchase" element={<AllPurchase/>}/>
                 </Routes>
             </BrowserRouter>
             )

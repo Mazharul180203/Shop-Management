@@ -1,13 +1,7 @@
 import React from 'react';
 import{ Menu } from 'antd';
 import {NavLink} from "react-router-dom";
-import {
-    AppstoreAddOutlined,
-    AreaChartOutlined, BarsOutlined,
-    HomeOutlined,
-    PayCircleOutlined,
-    SettingOutlined
-} from '@ant-design/icons';
+import {AppstoreAddOutlined, BarsOutlined, HomeOutlined,} from '@ant-design/icons';
 
 
 const MenuList = ({darkTheme}) => {
@@ -55,47 +49,14 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/supplier/allTransaction" className={({ isActive }) => isActive ? "active-link" : ""}>All Transaction</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-            <Menu.Item key="supplier" icon={<AppstoreAddOutlined />}>
-                Supplier
-            </Menu.Item>
-            <Menu.Item key="customer" icon={<AppstoreAddOutlined />}>
-                Customer
-            </Menu.Item>
-            <Menu.Item key="paymentReminder" icon={<AppstoreAddOutlined />}>
-                Payment Reminder
-            </Menu.Item>
-            <Menu.Item key="purchase" icon={<AppstoreAddOutlined />}>
-                Purchase
-            </Menu.Item>
-            <Menu.Item key="stockMenu" icon={<AppstoreAddOutlined />}>
-                Stock Menu
-            </Menu.Item>
-            <Menu.Item key="saleMenu" icon={<AppstoreAddOutlined />}>
-                Sale Menu
-            </Menu.Item>
-            <Menu.Item key="dueMenu" icon={<AppstoreAddOutlined />}>
-                Due Menu
-            </Menu.Item>
-            <Menu.Item key="Ledger" icon={<AppstoreAddOutlined />}>
-                Ledger
-            </Menu.Item>
-            <Menu.SubMenu key="subtasks 1" icon={<BarsOutlined />} title="Tasks">
-                <Menu.Item key="task 1"> Task 1</Menu.Item>
-                <Menu.Item key="task 2"> Task 2</Menu.Item>
-                <Menu.SubMenu key="subtasks 2" icon={<BarsOutlined />} title="SubTask">
-                    <Menu.Item key="Subtask 1"> Task 1</Menu.Item>
-                    <Menu.Item key="Subtask 2"> Task 2</Menu.Item>
-                </Menu.SubMenu>
+            <Menu.SubMenu key="purchaseItem" icon={<BarsOutlined />} title="PurchaseItems">
+                <Menu.Item key="all_new">
+                    <NavLink to="/purchaseitems/newPurchase" className={({ isActive }) => isActive ? "active-link" : ""}>New Purchase</NavLink>
+                </Menu.Item>
+                <Menu.Item key="task 2">
+                    <NavLink to="/purchaseitems/allPurchase" className={({ isActive }) => isActive ? "active-link" : ""}>All Purchase</NavLink>
+                </Menu.Item>
             </Menu.SubMenu>
-            <Menu.Item key="progress" icon={<AreaChartOutlined />}>
-                Progress
-            </Menu.Item>
-            <Menu.Item key="payment" icon={<PayCircleOutlined />}>
-                Payment
-            </Menu.Item>
-            <Menu.Item key="setting" icon={<SettingOutlined />}>
-                Setting
-            </Menu.Item>
         </Menu>
     );
 };
