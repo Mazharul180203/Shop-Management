@@ -297,7 +297,16 @@ const DropdownService = async (req) => {
                 }
             });
             typeName = 'unit';
-        } else {
+        } else if(type === "supplier"){
+            data = await prisma.supplier.findMany({
+                select: {
+                    id: true,
+                   supplier_name:true
+                }
+            });
+            typeName = 'supplier';
+        }
+        else {
             return { status: "fail", data: "Invalid type parameter" };
         }
 
