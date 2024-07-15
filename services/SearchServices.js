@@ -3,7 +3,8 @@ import { PrismaClient } from '@prisma/client';
 const CategoryItemService = async (req) => {
     try {
         const prisma = new PrismaClient();
-        const { categoryId } = req.params;
+        const { categoryId } = req.params
+        console.log("catedf :", categoryId);
         const categoryItem = await prisma.items.findMany({
             where: {
                 categoryId: parseInt(categoryId),
@@ -24,46 +25,18 @@ const ItemDetailService = async (req) => {
     try {
         const prisma = new PrismaClient();
         const { itemId } = req.params;
-
-        const result = await prisma.$transaction(async (prisma)=>{
-            const itemPurchase = await prisma.purchaseitems.findMany({
-                where: {
-                    itemId: parseInt(itemId),
-                },
-                select: {
-                    itemId:true,
-                    purchase_qty: true,
-                    price_per_unit:true,
-                    tax_Id: true,
-                    purchase_total:true,
-                    subtotal_amount:true,
-                    purchaseitems_items:{
-                        select:{
-                            items_name: true,
-                        }
-                    }
-                }
-            });
-            const related_unit = await prisma.items.findMany({
-                where:{
-                   id:parseInt(itemId)
-                },
-                select:{
-                    items_units:{
-                        select:{
-                            units_name:true,
-                            relation:true
-                        }
-                    }
-                }
-            })
-            return {itemPurchase,related_unit}
-        })
-
-        return { status: "success", data: result };
+        const itemPurchase = await prisma.items.findUnique({
+            where: {
+                id: parseInt(itemId),
+            },
+            select: {
+                items_name: true,
+            },
+        });
+        return { status: "success", data: itemPurchase };
     } catch (e) {
         console.error(e);
         return { status: "fail", data: e.message };
     }
-}
+};
 export { CategoryItemService, ItemDetailService }
