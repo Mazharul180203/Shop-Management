@@ -9,7 +9,7 @@ const PurchaseRoutingPage = () => {
         },
         {
             to:'/purchaseitems/allPurchase',
-            text:'New Purchase'
+            text:'View Purchase'
         }
     ]
     return (

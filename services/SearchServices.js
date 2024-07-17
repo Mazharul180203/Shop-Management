@@ -30,6 +30,7 @@ const ItemDetailService = async (req) => {
                 id: parseInt(itemId),
             },
             select: {
+                id:true,
                 items_name: true,
             },
         });

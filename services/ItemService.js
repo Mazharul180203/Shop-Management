@@ -80,10 +80,10 @@ const PurchaseItemService = async (req) => {
         const results = await prisma.$transaction(async prisma => {
             const responses = [];
             for (const item of items) {
-                const { itemId, supplierId, purchase_qty, price_per_unit, tax_Id } = item;
+                const { itemId, supplierId, purchase_qty, price_per_unit, discount, transport_cost, tax_Id } = item;
                 const purchaseQuantity = parseFloat(purchase_qty);
                 const pricePerUnit = parseFloat(price_per_unit);
-                const subtotalAmount = purchaseQuantity * pricePerUnit;
+                const subtotalAmount = (purchaseQuantity * pricePerUnit) - discount + transport_cost;
 
                 const existingPurchases = await prisma.purchaseitems.findMany({
                     where: { itemId },
