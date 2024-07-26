@@ -83,7 +83,7 @@ const PurchaseItemService = async (req) => {
                 const { itemId, supplierId, purchase_qty, price_per_unit, discount, transport_cost, tax_Id } = item;
                 const purchaseQuantity = parseFloat(purchase_qty);
                 const pricePerUnit = parseFloat(price_per_unit);
-                const subtotalAmount = (purchaseQuantity * pricePerUnit) - discount + transport_cost;
+                const subtotalAmount = ((purchaseQuantity * pricePerUnit).toFixed(2)) - discount + transport_cost;
 
                 const existingPurchases = await prisma.purchaseitems.findMany({
                     where: { itemId },
@@ -168,9 +168,10 @@ const PurchaseItemService = async (req) => {
 //this api must call when the purchaseitems table is call or modified because it is related to total debit or credit
 //according to their paid money
 const PurchaseSupplierTrackerService = async (req) => {
-    const { supplierId, totalCost, paid, curr_balance, payment_type } = req.body;
+    const { supplierId, totalCost, paid, curr_balance } = req.body; //totalCost = GrandTotal
     try {
         const prisma = new PrismaClient();
+        let payment_type = curr_balance > 0 ? 'Receivable' : 'Payable';
         const result = await prisma.$transaction(async prisma => {
             const existingSupplier = await prisma.purchasesuppliertrack.findMany({
                 where: { supplierId }
@@ -212,6 +213,28 @@ const PurchaseSupplierTrackerService = async (req) => {
     }
 }
 
+
+const GetPurchaseSupplierTrackerService = async (req) => {
+    const supplierId = parseInt(req.params.supplierId);
+    console.log("supplierId :",supplierId)
+    try{
+        const prisma = new PrismaClient();
+        const existingSupplierInfo = await prisma.purchasesuppliertrack.findMany({
+            where: { supplierId },
+            select:{
+                curr_balance:true,
+                payment_type:true,
+            }
+        });
+        return {status:"success", data: existingSupplierInfo}
+    }catch (e) {
+        console.error(e);
+        return { status: "fail", data: e.message };
+    }
+}
+
+
+
 const SupplierService = async (req) => {
     try {
         const prisma = new PrismaClient();
@@ -250,7 +273,6 @@ const CustomerService = async (req) => {
     try {
         const prisma = new PrismaClient();
         const { customer_name,customertypeId } = req.body;
-        console.log(r)
         const Customer = await prisma.customer.create({
             data: {
                 customer_name: customer_name,
@@ -267,7 +289,6 @@ const CustomerService = async (req) => {
 const DropdownService = async (req) => {
     const prisma = new PrismaClient();
     const {type} = req.params;
-    console.log( req.params)
     try {
         let data, typeName;
 
@@ -320,4 +341,4 @@ const DropdownService = async (req) => {
 };
 
 
-export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService,PurchaseSupplierTrackerService,DropdownService}
+export {CategoryService,BrandService,ItemService,UnitService,PurchaseItemService,SupplierService,CustomertypeService,CustomerService,PurchaseSupplierTrackerService,DropdownService,GetPurchaseSupplierTrackerService}

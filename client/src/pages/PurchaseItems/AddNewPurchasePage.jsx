@@ -12,6 +12,7 @@ const AddNewPurchasePage = () => {
     const [categoryList, setCategoryList] = useState([]);
     const [productList, setProductList] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
+    const [supplierBalance, setSupplierBalance] = useState([]);
     const [formData, setFormData] = useState({
         itemId: '',
         itemName: '',
@@ -104,7 +105,7 @@ const AddNewPurchasePage = () => {
                     itemName: itemData['items_name'],
                     purchaseQuantity: '',
                     purchasePerUnit: '',
-                    categoryId: '',
+                    categoryId: formData.categoryId,
                     supplierId: formData.supplierId,
                     discount: '',
                     totalCost: '',
@@ -200,7 +201,16 @@ const AddNewPurchasePage = () => {
                         <div className="col-md-4">
                             <Form.Item label="Supplier Name">
                                 <Select name="supplierId" value={formData.supplierId}
-                                        onChange={(value) => handleSelectChange('supplierId', value)}
+                                        onChange={async (value) => {
+                                            handleSelectChange('supplierId', value)
+                                            if (value) {
+                                                let res = await axios.get(`${BASE_URL}/api/v1/getpurchasesuppliertracker/${value}`, { withCredentials: true });
+                                                console.log("res :",res.data.data)
+                                                setSupplierBalance(res.data.data);
+                                            } else {
+                                                setSupplierBalance([]);
+                                            }
+                                        }}
                                         placeholder="Select Supplier">
                                     <Option value="">Select Supplier</Option>
                                     {
@@ -217,12 +227,12 @@ const AddNewPurchasePage = () => {
                                         onChange={async (value) => {
                                             handleSelectChange('categoryId', value);
                                             if (value) {
-                                                let res = await axios.post(`${BASE_URL}/api/v1/categoryItem/${value}`, {}, { withCredentials: true });
+                                                let res = await axios.post(`${BASE_URL}/api/v1/categoryItem/${value}`, {}, {withCredentials: true});
                                                 setProductList(res.data.data);
                                             } else {
                                                 setProductList([]);
                                             }
-                                            setFormData({ ...formData, categoryId: value, productId: '', });
+                                            setFormData({...formData, categoryId: value, productId: '',});
                                         }}
                                         placeholder="Select Category">
                                     <Option value="">Select the category</Option>
@@ -271,7 +281,17 @@ const AddNewPurchasePage = () => {
                     <div className="row">
                         <div className="col-md-4">
                             <Form.Item label="Transport And Labour Cost">
-                                <Input name="transportCost" value={transportCost} onChange={handleTransportCostChange} />
+                                <Input name="transportCost" value={transportCost} onChange={handleTransportCostChange}/>
+                            </Form.Item>
+                        </div>
+
+                    </div>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <Form.Item label="Supplier Previous Balance">
+
+                                {  console.log("supplier Balance :",supplierBalance[0].curr_balance) }
+                                <Input name="supplierbalance" value={supplierBalance.curr_balance} readOnly/>
                             </Form.Item>
                         </div>
                     </div>

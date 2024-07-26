@@ -8,7 +8,7 @@ import {
     CustomertypeService,
     CustomerService,
     PurchaseSupplierTrackerService,
-    DropdownService
+    DropdownService, GetPurchaseSupplierTrackerService
 } from "../services/ItemService.js";
 
 export const category =  async (req,res) =>{
@@ -56,6 +56,15 @@ export const purchaseitems =  async (req,res) =>{
 
 export const purchasesuppliertracker =  async (req,res) =>{
     let result = await PurchaseSupplierTrackerService(req);
+    if(result['status']==="success"){
+        return res.status(200).json(result);
+    }else {
+        return res.status(401).json(result);
+    }
+}
+
+export const getpurchasesuppliertracker =  async (req,res) =>{
+    let result = await GetPurchaseSupplierTrackerService(req);
     if(result['status']==="success"){
         return res.status(200).json(result);
     }else {
