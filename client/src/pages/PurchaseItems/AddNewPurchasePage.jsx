@@ -13,6 +13,10 @@ const AddNewPurchasePage = () => {
     const [productList, setProductList] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [supplierBalance, setSupplierBalance] = useState([]);
+    const [paidcost, setPaidCost] = useState({
+        paid:0,
+        updated_current_bal:0,
+    });
     const [formData, setFormData] = useState({
         itemId: '',
         itemName: '',
@@ -68,6 +72,18 @@ const AddNewPurchasePage = () => {
         updateTotalCost(selectedProducts, cost);
     };
 
+    const handlePaidChange  = (e) => {
+        const paid = parseFloat(e.target.value) || 0;
+        const grandTotal = selectedProducts.reduce((total, product) => {
+            return total + parseFloat(product.totalCost);
+        }, 0);
+
+        setPaidCost({
+            paid: paid,
+            updated_current_bal: grandTotal - paid + (supplierBalance[0]?.curr_balance || 0),
+        });
+    }
+
     const updateTotalCost = (products, newTransportCost = transportCost) => {
         const updatedProducts = [...products];
         const transportShare = (newTransportCost / selectedProducts.length) || 0;
@@ -85,6 +101,15 @@ const AddNewPurchasePage = () => {
         });
 
         setSelectedProducts(updatedProducts);
+
+        const grandTotal = updatedProducts.reduce((total, product) => {
+            return total + parseFloat(product.totalCost);
+        }, 0);
+
+        setPaidCost(prevState => ({
+            ...prevState,
+            updated_current_bal: grandTotal - prevState.paid + (supplierBalance[0]?.curr_balance || 0),
+        }));
     };
 
     const handleSelectChange = (name, value) => {
@@ -204,8 +229,8 @@ const AddNewPurchasePage = () => {
                                         onChange={async (value) => {
                                             handleSelectChange('supplierId', value)
                                             if (value) {
-                                                let res = await axios.get(`${BASE_URL}/api/v1/getpurchasesuppliertracker/${value}`, { withCredentials: true });
-                                                console.log("res :",res.data.data)
+                                                let res = await axios.get(`${BASE_URL}/api/v1/getpurchasesuppliertracker/${value}`, {withCredentials: true});
+                                                console.log("res :", res.data.data)
                                                 setSupplierBalance(res.data.data);
                                             } else {
                                                 setSupplierBalance([]);
@@ -288,10 +313,22 @@ const AddNewPurchasePage = () => {
                     </div>
                     <div className="row">
                         <div className="col-md-4">
-                            <Form.Item label="Supplier Previous Balance">
-
-                                {  console.log("supplier Balance :",supplierBalance[0].curr_balance) }
-                                <Input name="supplierbalance" value={supplierBalance.curr_balance} readOnly/>
+                            <Form.Item label="Previous Balance">
+                                <Input name="supplierbalance" value={supplierBalance[0]?.curr_balance || 'not available'} readOnly/>
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <Form.Item label="Paid">
+                                <Input name="paid" value={paidcost.paid} onChange={handlePaidChange} />
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <Form.Item label="Supplier Current Balance">
+                                <Input name="currentbalance" value={paidcost.updated_current_bal} readOnly/>
                             </Form.Item>
                         </div>
                     </div>

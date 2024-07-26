@@ -4,8 +4,6 @@ import {DecodeToken} from "../utility/TokenHelper.js";
 export default (req, res, next) => {
     let token = req.headers['token'] || req.cookies['token'];
 
-    console.log("token middleware :",token);
-
     let decoded = DecodeToken(token);
 
     if (decoded === null) {
