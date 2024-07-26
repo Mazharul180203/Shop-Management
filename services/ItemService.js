@@ -168,10 +168,9 @@ const PurchaseItemService = async (req) => {
 //this api must call when the purchaseitems table is call or modified because it is related to total debit or credit
 //according to their paid money
 const PurchaseSupplierTrackerService = async (req) => {
-    const { supplierId, totalCost, paid, curr_balance } = req.body; //totalCost = GrandTotal
+    const { supplierId, totalCost, paid, curr_balance, payment_type } = req.body; //totalCost = GrandTotal
     try {
         const prisma = new PrismaClient();
-        let payment_type = curr_balance > 0 ? 'Receivable' : 'Payable';
         const result = await prisma.$transaction(async prisma => {
             const existingSupplier = await prisma.purchasesuppliertrack.findMany({
                 where: { supplierId }

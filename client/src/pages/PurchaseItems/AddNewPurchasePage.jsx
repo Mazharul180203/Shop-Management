@@ -16,6 +16,7 @@ const AddNewPurchasePage = () => {
     const [paidcost, setPaidCost] = useState({
         paid:0,
         updated_current_bal:0,
+        paid_status:''
     });
     const [formData, setFormData] = useState({
         itemId: '',
@@ -81,6 +82,7 @@ const AddNewPurchasePage = () => {
         setPaidCost({
             paid: paid,
             updated_current_bal: (grandTotal - paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2),
+            paid_status: (grandTotal - paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2) > 0 ? 'Receivable':'Payable',
         });
     }
 
@@ -109,6 +111,7 @@ const AddNewPurchasePage = () => {
         setPaidCost(prevState => ({
             ...prevState,
             updated_current_bal: (grandTotal - prevState.paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2),
+            paid_status: (grandTotal - prevState.paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2) > 0 ? 'Receivable':'Payable',
         }));
     };
 
@@ -136,6 +139,7 @@ const AddNewPurchasePage = () => {
                     totalCost: '',
                     transportShare: '',
                 };
+
                 const updatedProducts = [...selectedProducts, newProduct];
                 setSelectedProducts(updatedProducts);
                 updateTotalCost(updatedProducts);
@@ -152,6 +156,7 @@ const AddNewPurchasePage = () => {
         try {
             setLoading(true);
             console.log("array :", selectedProducts);
+            console.log("purchaseTracker :",paidcost)
             //await axios.post(`${BASE_URL}/api/v1/purchase`, { ...formData, products: selectedProducts }, { withCredentials: true });
             //toast.success("Form submitted successfully");
         } catch (error) {
@@ -303,41 +308,53 @@ const AddNewPurchasePage = () => {
                         )}
                     />
 
-                    <div className="row">
-                        <div className="col-md-4">
+                    <div className="row justify-content-end mt-4">
+                        <div className="col-md-6">
                             <Form.Item label="Transport And Labour Cost">
                                 <Input name="transportCost" value={transportCost} onChange={handleTransportCostChange}/>
                             </Form.Item>
                         </div>
 
                     </div>
-                    <div className="row">
-                        <div className="col-md-4">
+                    <div className="row justify-content-end">
+                        <div className="col-md-3">
                             <Form.Item label="Previous Balance">
-                                <Input name="supplierbalance" value={supplierBalance[0]?.curr_balance || 'not available'} readOnly/>
+                                <Input name="supplierbalance"
+                                       value={supplierBalance[0]?.curr_balance || 'not available'} readOnly/>
+                            </Form.Item>
+                        </div>
+                        <div className="col-md-3">
+                            <Form.Item label="Balance Status">
+                                <Input name="balancestatus"
+                                       value={supplierBalance[0]?.payment_type || 'not available'} readOnly/>
                             </Form.Item>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-md-4">
+                    <div className="row justify-content-end">
+                        <div className="col-md-6">
                             <Form.Item label="Paid">
-                                <Input name="paid" value={paidcost.paid} onChange={handlePaidChange} />
+                                <Input name="paid" value={paidcost.paid} onChange={handlePaidChange}/>
                             </Form.Item>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-md-4">
+                    <div className="row justify-content-end">
+                        <div className="col-md-3">
                             <Form.Item label="Supplier Current Balance">
                                 <Input name="currentbalance" value={paidcost.updated_current_bal} readOnly/>
+                            </Form.Item>
+                        </div>
+                        <div className="col-md-3">
+                            <Form.Item label="Paid Status">
+                                <Input name="paidstatus" value={paidcost.paid_status} readOnly/>
                             </Form.Item>
                         </div>
                     </div>
 
                     <div className="row">
-                        <div className="col-md-12">
+                        <div className="col-md-12 d-flex justify-content-end">
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" disabled={loading}>
-                                    {loading ? 'Saving...' : 'Save'}
+                                    {loading ? 'Saving...' : 'Purchase'}
                                 </Button>
                             </Form.Item>
                         </div>
