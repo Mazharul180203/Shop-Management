@@ -72,7 +72,7 @@ const AddNewPurchasePage = () => {
         updateTotalCost(selectedProducts, cost);
     };
 
-    const handlePaidChange  = (e) => {
+    const handlePaidChange = (e) => {
         const paid = parseFloat(e.target.value) || 0;
         const grandTotal = selectedProducts.reduce((total, product) => {
             return total + parseFloat(product.totalCost);
@@ -80,7 +80,7 @@ const AddNewPurchasePage = () => {
 
         setPaidCost({
             paid: paid,
-            updated_current_bal: grandTotal - paid + (supplierBalance[0]?.curr_balance || 0),
+            updated_current_bal: (grandTotal - paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2),
         });
     }
 
@@ -108,7 +108,7 @@ const AddNewPurchasePage = () => {
 
         setPaidCost(prevState => ({
             ...prevState,
-            updated_current_bal: grandTotal - prevState.paid + (supplierBalance[0]?.curr_balance || 0),
+            updated_current_bal: (grandTotal - prevState.paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2),
         }));
     };
 
