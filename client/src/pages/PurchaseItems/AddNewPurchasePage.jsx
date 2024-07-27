@@ -16,20 +16,20 @@ const AddNewPurchasePage = () => {
     const [paidcost, setPaidCost] = useState({
         paid:0,
         updated_current_bal:0,
-        paid_status:''
+        paid_status:'',
+        total_cost:0,
     });
     const [formData, setFormData] = useState({
         itemId: '',
         itemName: '',
         supplierId: '',
         categoryId: '',
-        purchaseQuantity: '',
-        purchasePerUnit: '',
+        purchase_qty: '',
+        price_per_unit: '',
         priceAvg: '',
-        discount: '',
+        discount:'',
         totalCost: '',
-        transport_cost: '',
-        taxId: 323,
+        transport_cost:'',
     });
     const [transportCost, setTransportCost] = useState(0);
 
@@ -83,23 +83,24 @@ const AddNewPurchasePage = () => {
             paid: paid,
             updated_current_bal: (grandTotal - paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2),
             paid_status: (grandTotal - paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2) > 0 ? 'Receivable':'Payable',
+            total_cost: grandTotal
         });
     }
 
     const updateTotalCost = (products, newTransportCost = transportCost) => {
         const updatedProducts = [...products];
-        const transportShare = (newTransportCost / selectedProducts.length) || 0;
+        const transport_cost = (newTransportCost / selectedProducts.length) || 0;
 
         updatedProducts.forEach(product => {
-            const purchaseQuantity = parseFloat(product.purchaseQuantity) || 0;
-            const purchasePerUnit = parseFloat(product.purchasePerUnit) || 0;
+            const purchase_qty = parseFloat(product.purchase_qty) || 0;
+            const price_per_unit = parseFloat(product.price_per_unit) || 0;
             const discount = parseFloat(product.discount) || 0;
 
-            let totalCost = purchaseQuantity * purchasePerUnit - discount;
-            totalCost += transportShare;
+            let totalCost = purchase_qty * price_per_unit - discount;
+            totalCost += transport_cost;
 
             product.totalCost = totalCost.toFixed(2);
-            product.transportShare = transportShare.toFixed(2);
+            product.transport_cost = transport_cost.toFixed(2);
         });
 
         setSelectedProducts(updatedProducts);
@@ -112,6 +113,7 @@ const AddNewPurchasePage = () => {
             ...prevState,
             updated_current_bal: (grandTotal - prevState.paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2),
             paid_status: (grandTotal - prevState.paid + (supplierBalance[0]?.curr_balance || 0)).toFixed(2) > 0 ? 'Receivable':'Payable',
+            total_cost: grandTotal
         }));
     };
 
@@ -131,13 +133,13 @@ const AddNewPurchasePage = () => {
                 const newProduct = {
                     itemId: value,
                     itemName: itemData['items_name'],
-                    purchaseQuantity: '',
-                    purchasePerUnit: '',
+                    purchase_qty: '',
+                    price_per_unit: '',
                     categoryId: formData.categoryId,
                     supplierId: formData.supplierId,
                     discount: '',
                     totalCost: '',
-                    transportShare: '',
+                    transport_cost: '',
                 };
 
                 const updatedProducts = [...selectedProducts, newProduct];
@@ -154,16 +156,41 @@ const AddNewPurchasePage = () => {
 
     const handleSubmit = async () => {
         try {
-            setLoading(true);
-            console.log("array :", selectedProducts);
-            console.log("purchaseTracker :",paidcost)
-            //await axios.post(`${BASE_URL}/api/v1/purchase`, { ...formData, products: selectedProducts }, { withCredentials: true });
-            //toast.success("Form submitted successfully");
+            setLoading(true)
+            const purchaseItemsRequest = axios.post(
+                `${BASE_URL}/api/v1/purchaseitems`,
+                { selectedProducts },
+                { withCredentials: true }
+            );
+
+            const purchaseSupplierTrackerRequest = axios.post(
+                `${BASE_URL}/api/v1/purchasesuppliertracker`,
+                {
+                    supplierId: formData.supplierId,
+                    totalCost: paidcost['total_cost'],
+                    paid: paidcost['paid'],
+                    curr_balance: parseFloat(paidcost['updated_current_bal']),
+                    payment_type: paidcost['paid_status'],
+                },
+                { withCredentials: true }
+            );
+
+            const [purchaseItemsResponse, purchaseSupplierTrackerResponse] = await Promise.all([
+                purchaseItemsRequest,
+                purchaseSupplierTrackerRequest
+            ]);
+
+            if (purchaseItemsResponse.data.status === "success" && purchaseSupplierTrackerResponse.data.status === "success") {
+                toast.success('Success');
+            } else {
+                // Handle the case where one or both requests failed
+                toast.error('An error occurred with one or both requests');
+            }
         } catch (error) {
-            console.error("Error submitting form", error);
-            toast.error("Error submitting form");
-        } finally {
-            setLoading(false);
+            console.error(error);
+            toast.error('An error occurred while making the requests');
+        }finally {
+            setLoading(false)
         }
     }
 
@@ -181,18 +208,18 @@ const AddNewPurchasePage = () => {
         },
         {
             title: 'Quantity',
-            dataIndex: 'purchaseQuantity',
-            key: 'purchaseQuantity',
+            dataIndex: 'purchase_qty',
+            key: 'purchase_qty',
             render: (text, record, index) => (
-                <Input name="purchaseQuantity" value={text} onChange={(e) => handleInputChange(index, e)} />
+                <Input name="purchase_qty" value={text} onChange={(e) => handleInputChange(index, e)} />
             ),
         },
         {
             title: 'Unit Price',
-            dataIndex: 'purchasePerUnit',
-            key: 'purchasePerUnit',
+            dataIndex: 'price_per_unit',
+            key: 'price_per_unit',
             render: (text, record, index) => (
-                <Input name="purchasePerUnit" value={text} onChange={(e) => handleInputChange(index, e)} />
+                <Input name="price_per_unit" value={text} onChange={(e) => handleInputChange(index, e)} />
             ),
         },
         {
@@ -205,8 +232,8 @@ const AddNewPurchasePage = () => {
         },
         {
             title: 'Transport Share',
-            dataIndex: 'transportShare',
-            key: 'transportShare',
+            dataIndex: 'transport_cost',
+            key: 'transport_cost',
         },
         {
             title: 'Total',
@@ -216,12 +243,12 @@ const AddNewPurchasePage = () => {
     ];
 
     const calculateGrandTotal = () => {
-        return selectedProducts.reduce((total, product) => {
+        const totalCost = selectedProducts.reduce((total, product) => {
             const cost = parseFloat(product.totalCost) || 0;
             return total + cost;
         }, 0).toFixed(2);
+        return totalCost;
     };
-
     return (
         <div className="product-form-container">
             <h2>New Purchase Product</h2>

@@ -4,7 +4,6 @@ const CategoryItemService = async (req) => {
     try {
         const prisma = new PrismaClient();
         const { categoryId } = req.params
-        console.log("catedf :", categoryId);
         const categoryItem = await prisma.items.findMany({
             where: {
                 categoryId: parseInt(categoryId),

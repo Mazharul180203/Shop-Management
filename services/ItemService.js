@@ -74,16 +74,17 @@ const ItemService = async (req) => {
 
 
 const PurchaseItemService = async (req) => {
-    const { items } = req.body;
+    const {selectedProducts: items}  = req.body;
+    console.log("items : ",items);
     try {
         const prisma = new PrismaClient();
         const results = await prisma.$transaction(async prisma => {
             const responses = [];
             for (const item of items) {
-                const { itemId, supplierId, purchase_qty, price_per_unit, discount, transport_cost, tax_Id } = item;
+                const { itemId, supplierId, purchase_qty, price_per_unit, discount, transport_cost} = item;
                 const purchaseQuantity = parseFloat(purchase_qty);
                 const pricePerUnit = parseFloat(price_per_unit);
-                const subtotalAmount = ((purchaseQuantity * pricePerUnit).toFixed(2)) - discount + transport_cost;
+                const subtotalAmount = ((purchaseQuantity * pricePerUnit).toFixed(2)) - parseFloat(discount) + parseFloat(transport_cost);
 
                 const existingPurchases = await prisma.purchaseitems.findMany({
                     where: { itemId },
@@ -107,7 +108,7 @@ const PurchaseItemService = async (req) => {
                             subtotal_amount: subtotalAmount,
                             purchase_total: purchaseQuantity,
                             purchase_update_qty: purchaseQuantity,
-                            tax_Id,
+                            tax_Id:54,
                             price_avg: pricePerUnit
                         }
                     });
@@ -119,7 +120,7 @@ const PurchaseItemService = async (req) => {
                             price_per_unit: pricePerUnit,
                             subtotal_amount: subtotalAmount,
                             purchase_total: purchaseQuantity,
-                            tax_Id
+                            tax_Id:54
                         }
                     });
                 } else {
@@ -137,7 +138,7 @@ const PurchaseItemService = async (req) => {
                             purchase_total: { increment: purchaseQuantity },
                             purchase_update_qty: { increment: purchaseQuantity },
                             price_avg: newPriceAvg,
-                            tax_Id
+                            tax_Id:54
                         }
                     });
                     transactionResponse = await prisma.purchase.create({
@@ -148,7 +149,7 @@ const PurchaseItemService = async (req) => {
                             price_per_unit: pricePerUnit,
                             subtotal_amount: subtotalAmount,
                             purchase_total: purchaseQuantity,
-                            tax_Id
+                            tax_Id:54
                         }
                     });
                 }
@@ -168,7 +169,7 @@ const PurchaseItemService = async (req) => {
 //this api must call when the purchaseitems table is call or modified because it is related to total debit or credit
 //according to their paid money
 const PurchaseSupplierTrackerService = async (req) => {
-    const { supplierId, totalCost, paid, curr_balance, payment_type } = req.body; //totalCost = GrandTotal
+    const { supplierId, totalCost, paid, curr_balance, payment_type } = req.body; // totalCost = GrandTotal
     try {
         const prisma = new PrismaClient();
         const result = await prisma.$transaction(async prisma => {
@@ -176,7 +177,7 @@ const PurchaseSupplierTrackerService = async (req) => {
                 where: { supplierId }
             });
 
-            await prisma.supplierledger.create({
+            const updateLedger = await prisma.supplierledger.create({
                 data: {
                     supplierId,
                     payment_type,
@@ -186,8 +187,9 @@ const PurchaseSupplierTrackerService = async (req) => {
                 }
             });
 
+            let updateSuppliertracker;
             if (existingSupplier.length === 0) {
-                return await prisma.purchasesuppliertrack.create({
+                updateSuppliertracker = await prisma.purchasesuppliertrack.create({
                     data: {
                         supplierId,
                         curr_balance: curr_balance,
@@ -198,11 +200,16 @@ const PurchaseSupplierTrackerService = async (req) => {
                 await prisma.purchasesuppliertrack.updateMany({
                     where: { supplierId },
                     data: {
-                        curr_balance: curr_balance
+                        curr_balance: curr_balance,
+                        payment_type: payment_type
                     }
                 });
-                return existingSupplier;  // If updating, returning the existing data might be more appropriate
+                updateSuppliertracker = await prisma.purchasesuppliertrack.findMany({
+                    where: { supplierId }
+                });
             }
+
+            return { updateLedger, updateSuppliertracker };
         });
 
         return { status: "success", data: result };
