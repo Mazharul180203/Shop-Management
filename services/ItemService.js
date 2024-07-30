@@ -169,7 +169,7 @@ const PurchaseItemService = async (req) => {
 //this api must call when the purchaseitems table is call or modified because it is related to total debit or credit
 //according to their paid money
 const PurchaseSupplierTrackerService = async (req) => {
-    const { supplierId, totalCost, paid, curr_balance, payment_type } = req.body; // totalCost = GrandTotal
+    const { supplierId, totalCost, paid, curr_balance, payment_type,voucher_no } = req.body; // totalCost = GrandTotal
     try {
         const prisma = new PrismaClient();
         const result = await prisma.$transaction(async prisma => {
@@ -183,7 +183,8 @@ const PurchaseSupplierTrackerService = async (req) => {
                     payment_type,
                     credit: totalCost,
                     debit: paid,
-                    balance: curr_balance
+                    balance: curr_balance,
+                    voucher_no:voucher_no
                 }
             });
 

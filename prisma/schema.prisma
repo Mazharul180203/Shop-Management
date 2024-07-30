@@ -207,6 +207,7 @@ model supplierledger {
   supplier     supplier @relation(fields: [supplierId], references: [id])
   supplierId   Int
   payment_type String
+  voucher_no   String
   credit       Float
   debit        Float
   balance      Float

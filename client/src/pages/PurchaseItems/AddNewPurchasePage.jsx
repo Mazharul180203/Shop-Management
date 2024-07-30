@@ -3,6 +3,7 @@ import { Button, Form, Select, Spin, Input, Table } from "antd";
 import axios from "axios";
 import { BASE_URL } from "../../../../config/config.js";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 const { Option } = Select;
 
@@ -19,6 +20,11 @@ const AddNewPurchasePage = () => {
         paid_status:'',
         total_cost:0,
     });
+    const generateRandomNineDigitNumber = () =>{
+        const min = 100000000;
+        const max = 999999999;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
     const [formData, setFormData] = useState({
         itemId: '',
         itemName: '',
@@ -30,6 +36,8 @@ const AddNewPurchasePage = () => {
         discount:'',
         totalCost: '',
         transport_cost:'',
+        date:moment().format('DD-MM-YYYY'),
+        voucher_no:generateRandomNineDigitNumber()
     });
     const [transportCost, setTransportCost] = useState(0);
 
@@ -171,6 +179,8 @@ const AddNewPurchasePage = () => {
                     paid: paidcost['paid'],
                     curr_balance: parseFloat(paidcost['updated_current_bal']),
                     payment_type: paidcost['paid_status'],
+                    voucher_no:formData['voucher_no']
+
                 },
                 { withCredentials: true }
             );
@@ -181,9 +191,8 @@ const AddNewPurchasePage = () => {
             ]);
 
             if (purchaseItemsResponse.data.status === "success" && purchaseSupplierTrackerResponse.data.status === "success") {
-                toast.success('Success');
+                toast.success('Successfully Added Product');
             } else {
-                // Handle the case where one or both requests failed
                 toast.error('An error occurred with one or both requests');
             }
         } catch (error) {
@@ -255,7 +264,17 @@ const AddNewPurchasePage = () => {
             <Spin spinning={loading} size="large" tip="Loading...">
                 <Form layout="vertical" onFinish={handleSubmit}>
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-md-2">
+                            <Form.Item label="Date">
+                                <Input name="date" value={formData.date} readOnly/>
+                            </Form.Item>
+                        </div>
+                        <div className="col-md-2 ms-4">
+                            <Form.Item label="Voucher No.">
+                                <Input name="voucher_no" value={formData.voucher_no} readOnly/>
+                            </Form.Item>
+                        </div>
+                        <div className="col-md-2 ms-4">
                             <Form.Item label="Supplier Name">
                                 <Select name="supplierId" value={formData.supplierId}
                                         onChange={async (value) => {
@@ -278,7 +297,7 @@ const AddNewPurchasePage = () => {
                                 </Select>
                             </Form.Item>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-2 ms-4">
                             <Form.Item label="Product Category">
                                 <Select name="categoryId" value={formData.categoryId}
                                         onChange={async (value) => {
@@ -301,7 +320,7 @@ const AddNewPurchasePage = () => {
                                 </Select>
                             </Form.Item>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-2 ms-4">
                             <Form.Item label="Product Name">
                                 <Select name="productId" value={formData.itemId}
                                         onChange={async (value) => {
