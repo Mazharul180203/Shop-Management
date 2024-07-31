@@ -280,6 +280,7 @@ const CustomerService = async (req) => {
     try {
         const prisma = new PrismaClient();
         const { customer_name,customertypeId } = req.body;
+        console.log("customer  : ",req.body)
         const Customer = await prisma.customer.create({
             data: {
                 customer_name: customer_name,
@@ -333,8 +334,15 @@ const DropdownService = async (req) => {
                 }
             });
             typeName = 'supplier';
-        }
-        else {
+        } else if(type === "customertype") {
+            data = await prisma.customertype.findMany({
+                select: {
+                    id: true,
+                    type_name: true
+                }
+            });
+            typeName = 'customertype';
+        }else {
             return { status: "fail", data: "Invalid type parameter" };
         }
 
