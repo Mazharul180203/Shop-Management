@@ -21,6 +21,10 @@ import AllTransaction from "../components/Suppier/AllTransaction.jsx";
 import PurchaseItems from "../pages/PurchaseItems/PurchaseItems.jsx";
 import AddNewPurchase from "../components/PurchaseItems/AddNewPurchase.jsx";
 import AllPurchase from "../components/PurchaseItems/AllPurchase.jsx";
+import CustomerPage from "../pages/Customer/CustomerPage.jsx";
+import AddCustomerType from "../components/Customer/AddCustomerType.jsx";
+import AddNewCustomer from "../components/Customer/AddNewCustomer.jsx";
+import ViewAllCustomer from "../components/Customer/ViewAllCustomer.jsx";
 
 
 const Webroute = () => {
@@ -56,6 +60,10 @@ const Webroute = () => {
                     <Route path="/purchaseitems" element={<PurchaseItems/>}/>
                     <Route path="/purchaseitems/newPurchase" element={<AddNewPurchase/>}/>
                     <Route path="/purchaseitems/allPurchase" element={<AllPurchase/>}/>
+                    <Route path="/customer" element={<CustomerPage/>}/>
+                    <Route path="/customer/addType" element={<AddCustomerType/>}/>
+                    <Route path="/customer/addNew" element={<AddNewCustomer/>}/>
+                    <Route path="/customer/viewAll" element={<ViewAllCustomer/>}/>
                 </Routes>
             </BrowserRouter>
             )
