@@ -41,45 +41,50 @@ const SaleItemService = async (req,res) => {
     }
 };
 
-const SalesCustomerTrackerService = async (req,res) =>{
-    try{
-        const {customerId, totalCost, paid, curr_balance, payment_type} = req.body;
-        const result = await prisma.$transaction(async prisma => {
+const SalesCustomerTrackerService = async (req, res) => {
+    const prisma = new PrismaClient();
+    try {
+        const { customerId, totalCost, paid, curr_balance, payment_type } = req.body;
+        console.log("CustomerTracker: ", req.body);
+
+        const result = await prisma.$transaction(async (prisma) => {
             const existingCustomer = await prisma.salescustomertracker.findMany({
-                where:{customerId}
+                where: { customerId }
             });
 
             await prisma.customerledger.create({
-                data:{
+                data: {
                     customerId,
                     payment_type,
-                    credit: totalCost,
-                    debit:paid,
-                    balance:curr_balance
+                    credit: 43344,
+                    debit: 43,
+                    balance: curr_balance
                 }
             });
-
-            if(!existingCustomer){
-                return await prisma.salescustomertracker.create({
-                    customerId,
-                    curr_balance,
-                    payment_type
+            let customerTrackerResult;
+            if (existingCustomer.length === 0) {
+                customerTrackerResult = await prisma.salescustomertracker.create({
+                    data: {
+                        customerId,
+                        curr_balance,
+                        payment_type
+                    }
                 });
-            } else{
+            } else {
                 await prisma.salescustomertracker.updateMany({
-                    where:{customerId},
-                    data: {curr_balance}
+                    where: { customerId },
+                    data: { curr_balance, payment_type }
                 });
-                return existingCustomer
+                customerTrackerResult = existingCustomer;
             }
-        })
+            return customerTrackerResult;
+        });
         return { status: "success", data: result };
-
-    }catch (e) {
+    } catch (e) {
         console.error(e);
         return { status: "fail", data: e.message };
     }
-}
+};
 
 const CustomerPaymentService = async (req, res) => {
     try {
@@ -118,4 +123,22 @@ const CustomerPaymentService = async (req, res) => {
     }
 };
 
-export {SaleItemService,SalesCustomerTrackerService,CustomerPaymentService}
+
+const GetSalesCustomerTrackerService = async (req,res) =>{
+    const customerId = parseInt(req.params.customerId);
+    try{
+        const existingCustomerInfo = await prisma.salescustomertracker.findMany({
+            where:{customerId},
+            select:{
+                curr_balance: true,
+                payment_type: true
+            }
+        });
+        return { status:"success", data: existingCustomerInfo }
+    }catch (e){
+        console.error(e);
+        return { status: "fail", data: e.message };
+    }
+}
+
+export {SaleItemService,SalesCustomerTrackerService,CustomerPaymentService,GetSalesCustomerTrackerService}

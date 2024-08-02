@@ -327,7 +327,7 @@ const AddNewSalePage = () => {
                         rowKey="itemId"
                         summary={() => (
                             <Table.Summary.Row>
-                                <Table.Summary.Cell colSpan={6}>Grand Total</Table.Summary.Cell>
+                                <Table.Summary.Cell colSpan={7}>Grand Total</Table.Summary.Cell>
                                 <Table.Summary.Cell>
                                     <span>{calculateGrandTotal()}</span>
                                 </Table.Summary.Cell>
