@@ -137,10 +137,10 @@ const AddNewPurchasePage = () => {
             try {
                 setLoading(true);
                 let res = await axios.post(`${BASE_URL}/api/v1/itemDetail/${value}`, {}, { withCredentials: true });
-                const itemData = res.data.data;
+                const itemData = res.data.data['itemPurchase'];
                 const newProduct = {
                     itemId: value,
-                    itemName: itemData['items_name'],
+                    itemName: itemData?.['items_name'],
                     purchase_qty: '',
                     price_per_unit: '',
                     categoryId: formData.categoryId,

@@ -36,7 +36,8 @@ const AddNewSalePage = () => {
         totalCost: '',
         transport_cost:'',
         date:moment().format('DD-MM-YYYY'),
-        voucher_no:generateRandomNineDigitNumber()
+        voucher_no:generateRandomNineDigitNumber(),
+        purchase_update_qty:''
     });
     const [transportCost, setTransportCost] = useState(0);
 
@@ -133,9 +134,13 @@ const AddNewSalePage = () => {
                 setLoading(true);
                 let res = await axios.post(`${BASE_URL}/api/v1/itemDetail/${value}`, {}, { withCredentials: true });
                 const itemData = res.data.data;
+
+                console.log("Response : ",itemData);
+
                 const newProduct = {
                     itemId: value,
-                    itemName: itemData['items_name'],
+                    itemName: itemData?.['itemPurchase']['items_name'],
+                    purchase_update_qty: itemData?.['itemQuantity'].length > 0 ? itemData?.['itemQuantity'][0]['purchase_update_qty']:'0',
                     purchase_qty: '',
                     price_per_unit: '',
                     categoryId: formData.categoryId,
@@ -143,6 +148,7 @@ const AddNewSalePage = () => {
                     totalCost: '',
                     transport_cost: '',
                 };
+                console.log("purchase_update_qty :",newProduct.purchase_update_qty)
 
                 const updatedProducts = [...selectedProducts, newProduct];
                 setSelectedProducts(updatedProducts);
@@ -172,7 +178,7 @@ const AddNewSalePage = () => {
                     paid: paidcost['paid'],
                     curr_balance: parseFloat(paidcost['updated_current_bal']),
                     payment_type: paidcost['paid_status'],
-                    voucher_no:formData['voucher_no']
+                    voucher_no: formData['voucher_no']
 
                 },
                 { withCredentials: true }
@@ -207,6 +213,11 @@ const AddNewSalePage = () => {
             title: 'Name',
             dataIndex: 'itemName',
             key: 'itemName',
+        },
+        {
+            title: 'Stock',
+            dataIndex: 'purchase_update_qty',
+            key: 'purchase_update_qty',
         },
         {
             title: 'Quantity',
@@ -253,7 +264,7 @@ const AddNewSalePage = () => {
     };
     return (
         <div className="product-form-container">
-            <h2>New Purchase Product</h2>
+            <h2>New Sale Product</h2>
             <Spin spinning={loading} size="large" tip="Loading...">
                 <Form layout="vertical" onFinish={handleSubmit}>
                     <div className="row">
