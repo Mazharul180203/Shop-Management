@@ -341,7 +341,15 @@ const DropdownService = async (req) => {
                 }
             });
             typeName = 'customertype';
-        }else {
+        } else if(type === "customer") {
+            data = await prisma.customer.findMany({
+                select: {
+                    id: true,
+                    customer_name: true
+                }
+            });
+            typeName = 'customer';
+        } else {
             return { status: "fail", data: "Invalid type parameter" };
         }
 

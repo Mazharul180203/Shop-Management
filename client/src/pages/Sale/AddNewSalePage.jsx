@@ -9,7 +9,7 @@ const { Option } = Select;
 
 const AddNewSalePage = () => {
     const [loading, setLoading] = useState(false);
-    const [supplierList, setSupplierList] = useState([]);
+    const [customerList, setCustomerList] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
     const [productList, setProductList] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
@@ -29,7 +29,8 @@ const AddNewSalePage = () => {
         itemId: '',
         itemName: '',
         categoryId: '',
-        purchase_qty: '',
+        customerId:'',
+        sale_qty: '',
         price_per_unit: '',
         priceAvg: '',
         discount:'',
@@ -37,7 +38,7 @@ const AddNewSalePage = () => {
         transport_cost:'',
         date:moment().format('DD-MM-YYYY'),
         voucher_no:generateRandomNineDigitNumber(),
-        purchase_update_qty:''
+        total_update_qty:''
     });
     const [transportCost, setTransportCost] = useState(0);
 
@@ -50,7 +51,11 @@ const AddNewSalePage = () => {
     const getData = async () => {
         try {
             setLoading(true);
-            const categoryResponse = await axios.get(`${BASE_URL}/api/v1/dropdown/category`, { withCredentials: true });
+            const [customerResponse, categoryResponse] = await Promise.all([
+                axios.get(`${BASE_URL}/api/v1/dropdown/customer`, { withCredentials: true }),
+                axios.get(`${BASE_URL}/api/v1/dropdown/category`, { withCredentials: true }),
+            ]);
+            setCustomerList(customerResponse.data.data);
             setCategoryList(categoryResponse.data.data);
         } catch (error) {
             console.error("Error fetching data", error);
@@ -96,11 +101,11 @@ const AddNewSalePage = () => {
         const transport_cost = (newTransportCost / selectedProducts.length) || 0;
 
         updatedProducts.forEach(product => {
-            const purchase_qty = parseFloat(product.purchase_qty) || 0;
+            const sale_qty = parseFloat(product.sale_qty) || 0;
             const price_per_unit = parseFloat(product.price_per_unit) || 0;
             const discount = parseFloat(product.discount) || 0;
 
-            let totalCost = purchase_qty * price_per_unit - discount;
+            let totalCost = sale_qty * price_per_unit - discount;
             totalCost += transport_cost;
 
             product.totalCost = totalCost.toFixed(2);
@@ -140,15 +145,16 @@ const AddNewSalePage = () => {
                 const newProduct = {
                     itemId: value,
                     itemName: itemData?.['itemPurchase']['items_name'],
-                    purchase_update_qty: itemData?.['itemQuantity'].length > 0 ? itemData?.['itemQuantity'][0]['purchase_update_qty']:'0',
-                    purchase_qty: '',
+                    total_update_qty: itemData?.['itemQuantity'].length > 0 ? itemData?.['itemQuantity'][0]['purchase_update_qty']:'0',
                     price_per_unit: '',
+                    sale_qty:'',
                     categoryId: formData.categoryId,
                     discount: '',
                     totalCost: '',
                     transport_cost: '',
+                    customerId:formData.customerId
                 };
-                console.log("purchase_update_qty :",newProduct.purchase_update_qty)
+                console.log("total_update_qty :",newProduct.total_update_qty)
 
                 const updatedProducts = [...selectedProducts, newProduct];
                 setSelectedProducts(updatedProducts);
@@ -165,15 +171,16 @@ const AddNewSalePage = () => {
     const handleSubmit = async () => {
         try {
             setLoading(true)
-            const purchaseItemsRequest = axios.post(
-                `${BASE_URL}/api/v1/purchaseitems`,
+            const saleItemsRequest = axios.post(
+                `${BASE_URL}/api/v1/saleItem`,
                 { selectedProducts },
                 { withCredentials: true }
             );
 
-            const purchaseSupplierTrackerRequest = axios.post(
-                `${BASE_URL}/api/v1/purchasesuppliertracker`,
+            const saleCustomerTrackerRequest = axios.post(
+                `${BASE_URL}/api/v1/salesCustomerTracker`,
                 {
+                    customerId:formData.customerId,
                     totalCost: paidcost['total_cost'],
                     paid: paidcost['paid'],
                     curr_balance: parseFloat(paidcost['updated_current_bal']),
@@ -184,13 +191,13 @@ const AddNewSalePage = () => {
                 { withCredentials: true }
             );
 
-            const [purchaseItemsResponse, purchaseSupplierTrackerResponse] = await Promise.all([
-                purchaseItemsRequest,
-                purchaseSupplierTrackerRequest
+            const [saleItemsResponse, saleCustomerTrackerResponse] = await Promise.all([
+                saleItemsRequest,
+                saleCustomerTrackerRequest
             ]);
 
-            if (purchaseItemsResponse.data.status === "success" && purchaseSupplierTrackerResponse.data.status === "success") {
-                toast.success('Successfully Added Product');
+            if (saleItemsResponse.data.status === "success" && saleCustomerTrackerResponse.data.status === "success") {
+                toast.success('Successfully Sale Product');
             } else {
                 toast.error('An error occurred with one or both requests');
             }
@@ -216,15 +223,15 @@ const AddNewSalePage = () => {
         },
         {
             title: 'Stock',
-            dataIndex: 'purchase_update_qty',
-            key: 'purchase_update_qty',
+            dataIndex: 'total_update_qty',
+            key: 'total_update_qty',
         },
         {
             title: 'Quantity',
-            dataIndex: 'purchase_qty',
-            key: 'purchase_qty',
+            dataIndex: 'sale_qty',
+            key: 'sale_qty',
             render: (text, record, index) => (
-                <Input name="purchase_qty" value={text} onChange={(e) => handleInputChange(index, e)} />
+                <Input name="sale_qty" value={text} onChange={(e) => handleInputChange(index, e)} />
             ),
         },
         {
@@ -273,12 +280,35 @@ const AddNewSalePage = () => {
                                 <Input name="date" value={formData.date} readOnly/>
                             </Form.Item>
                         </div>
-                        <div className="col-md-3 ms-4">
+                        <div className="col-md-2 ms-4">
                             <Form.Item label="Voucher No.">
                                 <Input name="voucher_no" value={formData.voucher_no} readOnly/>
                             </Form.Item>
                         </div>
-                        <div className="col-md-3 ms-4">
+                        <div className="col-md-2 ms-4">
+                            <Form.Item label="Customer Name">
+                                <Select name="customerId" value={formData.customerId}
+                                        onChange={async (value) => {
+                                            handleSelectChange('customerId', value)
+                                            if (value) {
+                                                let res = await axios.get(`${BASE_URL}/api/v1/getsalescustomertracker/${value}`, {withCredentials: true});
+                                                console.log("res :", res.data.data)
+                                                setSupplierBalance(res.data.data);
+                                            } else {
+                                                setSupplierBalance([]);
+                                            }
+                                        }}
+                                        placeholder="Select Supplier">
+                                    <Option value="">Select Supplier</Option>
+                                    {
+                                        customerList?.map((item) => (
+                                            <Option key={item?.id} value={item?.id}>{item?.customer_name}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </div>
+                        <div className="col-md-2 ms-4">
                             <Form.Item label="Product Category">
                                 <Select name="categoryId" value={formData.categoryId}
                                         onChange={async (value) => {
@@ -301,7 +331,7 @@ const AddNewSalePage = () => {
                                 </Select>
                             </Form.Item>
                         </div>
-                        <div className="col-md-3 ms-4">
+                        <div className="col-md-2 ms-4">
                             <Form.Item label="Product Name">
                                 <Select name="productId" value={formData.itemId}
                                         onChange={async (value) => {

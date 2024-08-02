@@ -1,50 +1,54 @@
 import {PrismaClient} from "@prisma/client";
 const prisma = new PrismaClient();
 
-const SaleItemService = async (req,res) => {
+const SaleItemService = async (req, res) => {
+    const { selectedProducts: items } = req.body;
+    const prisma = new PrismaClient();
+
     try {
-        const { items } = req.body;
-        console.log("Received items:", items);
+        const results = await prisma.$transaction(async prisma => {
+            const responses = [];
+            for (const item of items) {
+                const { itemId, customerId, sale_qty, price_per_unit, discount, transport_cost } = item;
+                const saleQuantity = parseFloat(sale_qty);
+                const pricePerUnit = parseFloat(price_per_unit);
+                const subtotalAmount = ((saleQuantity * pricePerUnit).toFixed(2)) - parseFloat(discount) + parseFloat(transport_cost);
 
-        for (const item of items) {
-            const { itemId, total_qty, sales_qty, sales_price, dis_per, dis, total } = item;
-
-            await prisma.sales.create({
-                data: { itemId, total_qty, sales_qty, sales_price, dis_per, dis, total }
-            });
-            const purchaseItem = await prisma.purchaseitems.findFirst({
-                where: {
-                    itemId: itemId,
-                },
-                select: {
-                    id: true,
-                    purchase_update_qty: true,
-                }
-            });
-
-            if (purchaseItem) {
-                const modifiedTotalQty = purchaseItem.purchase_update_qty - sales_qty;
-                console.log("modifiedTotalQty:", modifiedTotalQty);
-                await prisma.purchaseitems.update({
-                    where: { id: purchaseItem.id },
-                    data: { purchase_update_qty: modifiedTotalQty }
+                const sellItem = await prisma.sales.create({
+                    data: {
+                        itemId,
+                        customerId,
+                        sale_qty: saleQuantity,
+                        discount: parseFloat(discount),
+                        transport_cost: parseFloat(transport_cost),
+                        sales_price: parseFloat(subtotalAmount)
+                    }
                 });
-            } else {
-                console.log(`No purchase item found for itemId: ${itemId}`);
-            }
-        }
 
-        return { status: "success", data: "Purchase totals updated successfully" };
+                const purchaseUpdate = await prisma.purchaseitems.updateMany({
+                    where: { itemId },
+                    data: {
+                        purchase_update_qty: { decrement: saleQuantity }
+                    }
+                });
+
+                responses.push({ sellItem, purchaseUpdate });
+            }
+            return responses;
+        });
+
+        return { status: "success", data: results };
     } catch (e) {
         console.error(e);
         return { status: "fail", data: e.message };
     }
 };
 
+
 const SalesCustomerTrackerService = async (req, res) => {
     const prisma = new PrismaClient();
     try {
-        const { customerId, totalCost, paid, curr_balance, payment_type } = req.body;
+        const { customerId, totalCost, paid, curr_balance, payment_type,voucher_no } = req.body;
         console.log("CustomerTracker: ", req.body);
 
         const result = await prisma.$transaction(async (prisma) => {
@@ -56,9 +60,10 @@ const SalesCustomerTrackerService = async (req, res) => {
                 data: {
                     customerId,
                     payment_type,
-                    credit: 43344,
-                    debit: 43,
-                    balance: curr_balance
+                    credit: totalCost,
+                    debit: paid,
+                    balance: curr_balance,
+                    voucher_no
                 }
             });
             let customerTrackerResult;
@@ -73,7 +78,10 @@ const SalesCustomerTrackerService = async (req, res) => {
             } else {
                 await prisma.salescustomertracker.updateMany({
                     where: { customerId },
-                    data: { curr_balance, payment_type }
+                    data: {
+                        curr_balance,
+                        payment_type
+                    }
                 });
                 customerTrackerResult = existingCustomer;
             }

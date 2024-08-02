@@ -107,17 +107,17 @@ model purchase {
 }
 
 model sales {
-  id          Int      @id @default(autoincrement())
-  items       items    @relation(fields: [itemId], references: [id])
-  itemId      Int
-  total_qty   Float
-  sales_qty   Float
-  sales_price Float
-  dis_per     Float
-  dis         Float
-  total       Int
-  createdAt   DateTime @default(now()) @db.DateTime
-  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime
+  id             Int      @id @default(autoincrement())
+  items          items    @relation(fields: [itemId], references: [id])
+  itemId         Int
+  customer       customer @relation(fields: [customerId], references: [id])
+  customerId     Int
+  sale_qty       Float
+  sales_price    Float
+  discount       Float
+  transport_cost Float
+  createdAt      DateTime @default(now()) @db.DateTime
+  updatedAt      DateTime @default(now()) @updatedAt @db.DateTime
 }
 
 model customertype {
@@ -134,6 +134,7 @@ model customer {
   customer_name        String
   customerId           customertype           @relation(fields: [customertypeId], references: [id])
   customertypeId       Int
+  sales                sales[]
   salescustomertracker salescustomertracker[]
   customerledger       customerledger[]
   customerpayment      customerpayment[]
@@ -175,6 +176,7 @@ model customerledger {
   credit       Float
   debit        Float
   balance      Float
+  voucher_no   String
   createdAt    DateTime @default(now()) @db.DateTime
   updatedAt    DateTime @default(now()) @updatedAt @db.DateTime
 }
