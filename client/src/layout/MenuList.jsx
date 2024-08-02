@@ -56,8 +56,6 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/purchaseitems/allPurchase" className={({ isActive }) => isActive ? "active-link" : ""}>All Purchase</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-
-
             <Menu.SubMenu key="customer" icon={<BarsOutlined />} title="Customer">
                 <Menu.Item key="add_type_customer">
                     <NavLink to="/customer/addType" className={({ isActive }) => isActive ? "active-link" : ""}>Add Type</NavLink>
@@ -67,6 +65,15 @@ const MenuList = ({darkTheme}) => {
                 </Menu.Item>
                 <Menu.Item key="view_all_customer">
                     <NavLink to="/customer/viewAll" className={({ isActive }) => isActive ? "active-link" : ""}>View All</NavLink>
+                </Menu.Item>
+            </Menu.SubMenu>
+
+            <Menu.SubMenu key="sale" icon={<BarsOutlined />} title="Sale">
+                <Menu.Item key="add_sale">
+                    <NavLink to="/sale/addSale" className={({ isActive }) => isActive ? "active-link" : ""}>Add Sale</NavLink>
+                </Menu.Item>
+                <Menu.Item key="add_all_sale">
+                    <NavLink to="/sale/allSale" className={({ isActive }) => isActive ? "active-link" : ""}>All Sale</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
         </Menu>

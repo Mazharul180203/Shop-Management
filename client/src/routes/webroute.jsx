@@ -25,6 +25,9 @@ import CustomerPage from "../pages/Customer/CustomerPage.jsx";
 import AddCustomerType from "../components/Customer/AddCustomerType.jsx";
 import AddNewCustomer from "../components/Customer/AddNewCustomer.jsx";
 import ViewAllCustomer from "../components/Customer/ViewAllCustomer.jsx";
+import SaleItemsPage from "../pages/Sale/SaleItemsPage.jsx";
+import AddNewSale from "../components/Sale/AddNewSale.jsx";
+import AllSale from "../components/Sale/AllSale.jsx";
 
 
 const Webroute = () => {
@@ -64,6 +67,9 @@ const Webroute = () => {
                     <Route path="/customer/addType" element={<AddCustomerType/>}/>
                     <Route path="/customer/addNew" element={<AddNewCustomer/>}/>
                     <Route path="/customer/viewAll" element={<ViewAllCustomer/>}/>
+                    <Route path="/sale" element={<SaleItemsPage/>}/>
+                    <Route path="/sale/addSale" element={<AddNewSale/>}/>
+                    <Route path="/sale/allSale" element={<AllSale/>}/>
                 </Routes>
             </BrowserRouter>
             )

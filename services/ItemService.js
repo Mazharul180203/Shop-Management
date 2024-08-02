@@ -75,7 +75,6 @@ const ItemService = async (req) => {
 
 const PurchaseItemService = async (req) => {
     const {selectedProducts: items}  = req.body;
-    console.log("items : ",items);
     try {
         const prisma = new PrismaClient();
         const results = await prisma.$transaction(async prisma => {
@@ -169,14 +168,14 @@ const PurchaseItemService = async (req) => {
 //this api must call when the purchaseitems table is call or modified because it is related to total debit or credit
 //according to their paid money
 const PurchaseSupplierTrackerService = async (req) => {
-    const { supplierId, totalCost, paid, curr_balance, payment_type,voucher_no } = req.body; // totalCost = GrandTotal
+    const { supplierId, totalCost, paid, curr_balance, payment_type, voucher_no } = req.body; // Ensure voucher_no is present in req.body
+    console.log("VoucherNo : ",req.body);
     try {
         const prisma = new PrismaClient();
         const result = await prisma.$transaction(async prisma => {
             const existingSupplier = await prisma.purchasesuppliertrack.findMany({
                 where: { supplierId }
             });
-
             const updateLedger = await prisma.supplierledger.create({
                 data: {
                     supplierId,
@@ -184,7 +183,7 @@ const PurchaseSupplierTrackerService = async (req) => {
                     credit: totalCost,
                     debit: paid,
                     balance: curr_balance,
-                    voucher_no:voucher_no
+                    voucher_no
                 }
             });
 
@@ -193,16 +192,16 @@ const PurchaseSupplierTrackerService = async (req) => {
                 updateSuppliertracker = await prisma.purchasesuppliertrack.create({
                     data: {
                         supplierId,
-                        curr_balance: curr_balance,
-                        payment_type: payment_type,
+                        curr_balance,
+                        payment_type,
                     }
                 });
             } else {
                 await prisma.purchasesuppliertrack.updateMany({
                     where: { supplierId },
                     data: {
-                        curr_balance: curr_balance,
-                        payment_type: payment_type
+                        curr_balance,
+                        payment_type
                     }
                 });
                 updateSuppliertracker = await prisma.purchasesuppliertrack.findMany({

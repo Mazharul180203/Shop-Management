@@ -7,7 +7,7 @@ import moment from "moment";
 
 const { Option } = Select;
 
-const AddNewPurchasePage = () => {
+const AddNewSalePage = () => {
     const [loading, setLoading] = useState(false);
     const [supplierList, setSupplierList] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
@@ -23,12 +23,11 @@ const AddNewPurchasePage = () => {
     const generateRandomNineDigitNumber = () =>{
         const min = 100000000;
         const max = 999999999;
-        return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     const [formData, setFormData] = useState({
         itemId: '',
         itemName: '',
-        supplierId: '',
         categoryId: '',
         purchase_qty: '',
         price_per_unit: '',
@@ -50,11 +49,7 @@ const AddNewPurchasePage = () => {
     const getData = async () => {
         try {
             setLoading(true);
-            const [supplierResponse, categoryResponse] = await Promise.all([
-                axios.get(`${BASE_URL}/api/v1/dropdown/supplier`, { withCredentials: true }),
-                axios.get(`${BASE_URL}/api/v1/dropdown/category`, { withCredentials: true }),
-            ]);
-            setSupplierList(supplierResponse.data.data);
+            const categoryResponse = await axios.get(`${BASE_URL}/api/v1/dropdown/category`, { withCredentials: true });
             setCategoryList(categoryResponse.data.data);
         } catch (error) {
             console.error("Error fetching data", error);
@@ -144,7 +139,6 @@ const AddNewPurchasePage = () => {
                     purchase_qty: '',
                     price_per_unit: '',
                     categoryId: formData.categoryId,
-                    supplierId: formData.supplierId,
                     discount: '',
                     totalCost: '',
                     transport_cost: '',
@@ -174,7 +168,6 @@ const AddNewPurchasePage = () => {
             const purchaseSupplierTrackerRequest = axios.post(
                 `${BASE_URL}/api/v1/purchasesuppliertracker`,
                 {
-                    supplierId: formData.supplierId,
                     totalCost: paidcost['total_cost'],
                     paid: paidcost['paid'],
                     curr_balance: parseFloat(paidcost['updated_current_bal']),
@@ -269,35 +262,12 @@ const AddNewPurchasePage = () => {
                                 <Input name="date" value={formData.date} readOnly/>
                             </Form.Item>
                         </div>
-                        <div className="col-md-2 ms-4">
+                        <div className="col-md-3 ms-4">
                             <Form.Item label="Voucher No.">
                                 <Input name="voucher_no" value={formData.voucher_no} readOnly/>
                             </Form.Item>
                         </div>
-                        <div className="col-md-2 ms-4">
-                            <Form.Item label="Supplier Name">
-                                <Select name="supplierId" value={formData.supplierId}
-                                        onChange={async (value) => {
-                                            handleSelectChange('supplierId', value)
-                                            if (value) {
-                                                let res = await axios.get(`${BASE_URL}/api/v1/getpurchasesuppliertracker/${value}`, {withCredentials: true});
-                                                console.log("res :", res.data.data)
-                                                setSupplierBalance(res.data.data);
-                                            } else {
-                                                setSupplierBalance([]);
-                                            }
-                                        }}
-                                        placeholder="Select Supplier">
-                                    <Option value="">Select Supplier</Option>
-                                    {
-                                        supplierList?.map((item) => (
-                                            <Option key={item?.id} value={item?.id}>{item?.supplier_name}</Option>
-                                        ))
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </div>
-                        <div className="col-md-2 ms-4">
+                        <div className="col-md-3 ms-4">
                             <Form.Item label="Product Category">
                                 <Select name="categoryId" value={formData.categoryId}
                                         onChange={async (value) => {
@@ -320,7 +290,7 @@ const AddNewPurchasePage = () => {
                                 </Select>
                             </Form.Item>
                         </div>
-                        <div className="col-md-2 ms-4">
+                        <div className="col-md-3 ms-4">
                             <Form.Item label="Product Name">
                                 <Select name="productId" value={formData.itemId}
                                         onChange={async (value) => {
@@ -411,4 +381,4 @@ const AddNewPurchasePage = () => {
     );
 };
 
-export default AddNewPurchasePage;
+export default AddNewSalePage;
