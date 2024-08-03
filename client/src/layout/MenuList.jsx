@@ -1,16 +1,29 @@
 import React from 'react';
 import{ Menu } from 'antd';
 import {NavLink} from "react-router-dom";
-import {AppstoreAddOutlined, BarsOutlined, HomeOutlined,} from '@ant-design/icons';
+import {
+    AppstoreAddOutlined,
+    BarsOutlined,
+    DashboardOutlined,
+    ExportOutlined,
+    HomeOutlined,
+    ImportOutlined,
+    ProductOutlined,
+    ShoppingCartOutlined,
+    TagsOutlined,
+    TeamOutlined,
+    TrademarkCircleOutlined,
+    UserSwitchOutlined,
+} from '@ant-design/icons';
 
 const MenuList = ({darkTheme}) => {
     return (
         <Menu theme={darkTheme ? 'dark' : 'light'} mode="inline" className='menu-bar'>
-            <Menu.Item key="dashboard" icon={<HomeOutlined />}>
+            <Menu.Item key="dashboard" icon={<DashboardOutlined /> }>
                 <NavLink to="/" className={({ isActive }) => isActive ? "active-link" : ""}>Dashboard</NavLink>
             </Menu.Item>
 
-            <Menu.SubMenu key="category" icon={<BarsOutlined />} title="Category">
+            <Menu.SubMenu key="category" icon={<TagsOutlined />} title="Category">
                 <Menu.Item key="add_new_category">
                     <NavLink to="/category/addNew" className={({ isActive }) => isActive ? "active-link" : ""}>All New</NavLink>
                 </Menu.Item>
@@ -18,7 +31,7 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/category/viewAll" className={({ isActive }) => isActive ? "active-link" : ""}>View All</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="brand" icon={<BarsOutlined />} title="Brand">
+            <Menu.SubMenu key="brand" icon={<TrademarkCircleOutlined />} title="Brand">
                 <Menu.Item key="add_new_brand">
                     <NavLink to="/brand/addNew" className={({ isActive }) => isActive ? "active-link" : ""}>All New</NavLink>
                 </Menu.Item>
@@ -26,7 +39,7 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/brand/viewAll" className={({ isActive }) => isActive ? "active-link" : ""}>View All</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="product" icon={<BarsOutlined />} title="Product">
+            <Menu.SubMenu key="product" icon={<ProductOutlined />} title="Product">
                 <Menu.Item key="add_product">
                     <NavLink to="/product/addProduct" className={({ isActive }) => isActive ? "active-link" : ""}>Add Product</NavLink>
                 </Menu.Item>
@@ -34,7 +47,7 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/product/allProduct" className={({ isActive }) => isActive ? "active-link" : ""}>All Product</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="supplier" icon={<BarsOutlined />} title="Supplier">
+            <Menu.SubMenu key="supplier" icon={<UserSwitchOutlined />} title="Supplier">
                 <Menu.Item key="add_supplier">
                     <NavLink to="/supplier/addSupplier" className={({ isActive }) => isActive ? "active-link" : ""}>Add Supplier</NavLink>
                 </Menu.Item>
@@ -48,7 +61,7 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/supplier/allTransaction" className={({ isActive }) => isActive ? "active-link" : ""}>All Transaction</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="purchaseItem" icon={<BarsOutlined />} title="PurchaseItems">
+            <Menu.SubMenu key="purchaseItem" icon={<ImportOutlined />} title="PurchaseItems">
                 <Menu.Item key="new_purchase">
                     <NavLink to="/purchaseitems/newPurchase" className={({ isActive }) => isActive ? "active-link" : ""}>New Purchase</NavLink>
                 </Menu.Item>
@@ -56,7 +69,7 @@ const MenuList = ({darkTheme}) => {
                     <NavLink to="/purchaseitems/allPurchase" className={({ isActive }) => isActive ? "active-link" : ""}>All Purchase</NavLink>
                 </Menu.Item>
             </Menu.SubMenu>
-            <Menu.SubMenu key="customer" icon={<BarsOutlined />} title="Customer">
+            <Menu.SubMenu key="customer" icon={<TeamOutlined />} title="Customer">
                 <Menu.Item key="add_type_customer">
                     <NavLink to="/customer/addType" className={({ isActive }) => isActive ? "active-link" : ""}>Add Type</NavLink>
                 </Menu.Item>
@@ -68,7 +81,7 @@ const MenuList = ({darkTheme}) => {
                 </Menu.Item>
             </Menu.SubMenu>
 
-            <Menu.SubMenu key="sale" icon={<BarsOutlined />} title="Sale">
+            <Menu.SubMenu key="sale" icon={<ShoppingCartOutlined />} title="Sale">
                 <Menu.Item key="add_sale">
                     <NavLink to="/sale/addSale" className={({ isActive }) => isActive ? "active-link" : ""}>Add Sale</NavLink>
                 </Menu.Item>
