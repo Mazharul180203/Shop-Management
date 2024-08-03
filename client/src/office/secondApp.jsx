@@ -15,7 +15,21 @@ const initialData = [
     },
     {
         key: '2',
-        name: 'Joe Black',
+        name: 'saurav',
+        age: 24,
+        address: 'London No. 1 Lake Park',
+        role: 'admin',
+    },
+    {
+        key: '3',
+        name: 'sasss',
+        age: 32,
+        address: 'New York No. 1 Lake Park',
+        role: 'admin',
+    },
+    {
+        key: '4',
+        name: 'dfdf',
         age: 42,
         address: 'London No. 1 Lake Park',
         role: 'admin',
@@ -58,54 +72,12 @@ const columnDefinitions = [
 ];
 
 const SecondApp = () => {
-    const [selectedBox, setSelectedBox] = useState(null);
-
-    const handleClick = (boxNumber) => {
-        setSelectedBox(boxNumber);
-    };
 
     return (
             <div className="row justify-content-start">
-                <div className="col-sm-4 col-md-2 mb-4">
-                    <Button style={{height: '90px'}}
-                            className={`box ${selectedBox === 1 ? 'selected' : ''}`}
-                            onClick={() => handleClick(1)}
-                            icon={<HomeOutlined style={{fontSize: '24px'}}/>}
-                    >
-                        <span className="bold-text">Box 1</span>
 
-                    </Button>
-                </div>
-                <div className="col-sm-4 col-md-2 mb-4">
-                    <Button style={{height: '90px'}}
-                            className={`box ${selectedBox === 2 ? 'selected' : ''}`}
-                            onClick={() => handleClick(2)}
-                            icon={<HomeOutlined style={{fontSize: '24px'}}/>}
-                    >
-                        <span className="bold-text">Box 2</span>
-                    </Button>
-                </div>
-                <div className="col-sm-4 col-md-2 mb-4">
-                    <Button style={{height: '90px'}}
-                            className={`box ${selectedBox === 3 ? 'selected' : ''}`}
-                            onClick={() => handleClick(3)}
-                            icon={<HomeOutlined style={{fontSize: '24px'}}/>}
-
-                    >
-                        <span className="bold-text">Box 3</span>
-                    </Button>
-                </div>
-                <div className=" col-sm-4 col-md-2 mb-4">
-                    <Button style={{height: '90px'}}
-                            className={`box ${selectedBox === 5 ? 'selected' : ''}`}
-                            onClick={() => handleClick(5)}
-                            icon={<HomeOutlined style={{fontSize: '24px'}}/>}
-                    >
-                        <span className="bold-text">Box 4</span>
-                    </Button>
-                </div>
                 <div>
-                    <NewTable/>
+                    {/*<NewTable/>*/}
                     <EditTable initialData={initialData} columnDefinitions={columnDefinitions}/>
                 </div>
             </div>

@@ -275,7 +275,7 @@ const AddNewPurchasePage = () => {
                             </Form.Item>
                         </div>
                         <div className="col-md-2 ms-4">
-                            <Form.Item label="Supplier Name">
+                            <Form.Item label="Supplier">
                                 <Select name="supplierId" value={formData.supplierId}
                                         onChange={async (value) => {
                                             handleSelectChange('supplierId', value)
@@ -298,7 +298,7 @@ const AddNewPurchasePage = () => {
                             </Form.Item>
                         </div>
                         <div className="col-md-2 ms-4">
-                            <Form.Item label="Product Category">
+                            <Form.Item label="Category">
                                 <Select name="categoryId" value={formData.categoryId}
                                         onChange={async (value) => {
                                             handleSelectChange('categoryId', value);
@@ -321,7 +321,7 @@ const AddNewPurchasePage = () => {
                             </Form.Item>
                         </div>
                         <div className="col-md-2 ms-4">
-                            <Form.Item label="Product Name">
+                            <Form.Item label="Product">
                                 <Select name="productId" value={formData.itemId}
                                         onChange={async (value) => {
                                             handleSelectChange('itemId', value);

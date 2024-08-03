@@ -6,9 +6,9 @@ import {Button, Input, Space, Spin, Table} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 
-const ViewAllProductPage = () => {
+const ViewAllSupplierPage = () => {
     const [loading, setLoading] = useState(false);
-    const [productList, setProductList] = useState([]);
+    const [supplierList, setSupplierList] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -20,9 +20,8 @@ const ViewAllProductPage = () => {
     const getData = async () => {
         try {
             setLoading(true);
-            let res = await axios.get(`${BASE_URL}/api/v1/dropdown/items`, { withCredentials: true });
-            console.log("category list", res.data.data);
-            setProductList(res.data.data);
+            let res = await axios.get(`${BASE_URL}/api/v1/dropdown/supplier`, { withCredentials: true });
+            setSupplierList(res.data.data);
         } catch (error) {
             console.error("Error fetching data", error);
             toast.error("Error fetching data");
@@ -126,28 +125,42 @@ const ViewAllProductPage = () => {
             render: (text, record, index) => index + 1,
         },
         {
-            title: 'Product Name',
-            dataIndex: 'productsName',
-            key: 'productsName',
-            ...getColumnSearchProps('productsName'),
+            title: 'Supplier Name',
+            dataIndex: 'supplierName',
+            key: 'supplierName',
+            ...getColumnSearchProps('supplierName'),
         },
         {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
-            ...getColumnSearchProps('description'),
+            title: 'Contact Person',
+            dataIndex: 'contractPeron',
+            key: 'contractPeron',
+            ...getColumnSearchProps('contractPeron'),
+        },
+        {
+            title: 'Contact Number',
+            dataIndex: 'contactNumber',
+            key: 'contactNumber',
+            ...getColumnSearchProps('contactNumber'),
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+            ...getColumnSearchProps('address'),
         },
     ];
 
-    const data = productList.map((products, index) => ({
+    const data = supplierList.map((supplier, index) => ({
         key: index,
-        productsName: products.items_name,
-        description: products.description,
+        supplierName: supplier.supplier_name,
+        contractPeron:supplier.contact_person,
+        contactNumber:supplier.mobile_number,
+        address:supplier.address,
     }));
 
     return (
         <div className="product-form-container">
-            <h2>All Product Details</h2>
+            <h2>All Supplier Details</h2>
             <Spin spinning={loading} size="large" tip="Loading...">
                 <Table
                     columns={columns}
@@ -160,4 +173,4 @@ const ViewAllProductPage = () => {
     );
 };
 
-export default ViewAllProductPage;
+export default ViewAllSupplierPage;

@@ -3,23 +3,6 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, Form, Typography, Popconfirm, InputNumber } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-const initialData = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        role: 'admin'
-    },
-    {
-        key: '2',
-        name: 'Joe Black',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        role: 'admin'
-    },
-];
-
 const EditableCell = ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
     const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     return (
@@ -46,7 +29,7 @@ const EditableCell = ({ editing, dataIndex, title, inputType, record, index, chi
     );
 };
 
-const EditTable = () => {
+const EditTable = ({ initialData, columnDefinitions }) => {
     const [form] = Form.useForm();
     const [data, setData] = useState(initialData);
     const [editingKey, setEditingKey] = useState('');
@@ -187,90 +170,46 @@ const EditTable = () => {
             ),
     });
 
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            width: '20%',
-            editable: true,
-            ...getColumnSearchProps('name'),
-        },
-        {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
-            width: '10%',
-            editable: true,
-            sorter: (a, b) => a.age - b.age,
-            sortDirections: ['descend', 'ascend'],
-            ...getColumnSearchProps('age'),
-        },
-        {
-            title: 'Role',
-            dataIndex: 'role',
-            key: 'role',
-            width: '15%',
-            editable: true,
-            ...getColumnSearchProps('role'),
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-            width: '35%',
-            editable: true,
-            sorter: (a, b) => a.address.length - b.address.length,
-            sortDirections: ['descend', 'ascend'],
-            ...getColumnSearchProps('address'),
-        },
-        {
-            title: 'Operation',
-            dataIndex: 'operation',
-            render: (_, record) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <span>
-                        <Typography.Link
-                            onClick={() => save(record.key)}
-                            style={{
-                                marginRight: 8,
-                            }}
-                        >
-                            Save
-                        </Typography.Link>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a>Cancel</a>
-                        </Popconfirm>
-                    </span>
-                ) : (
-                    <>
-                        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                            Edit
-                        </Typography.Link>
-                        <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
-                            <a style={{ marginLeft: 8 }}>Delete</a>
-                        </Popconfirm>
-                    </>
-                );
-            },
-        },
-    ];
+    const columns = columnDefinitions.map((col) => ({
+        ...col,
+        ...getColumnSearchProps(col.dataIndex),
+        onCell: (record) => ({
+            record,
+            inputType: col.dataIndex === 'age' ? 'number' : 'text',
+            dataIndex: col.dataIndex,
+            title: col.title,
+            editing: isEditing(record),
+        }),
+    }));
 
-    const mergedColumns = columns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
-        return {
-            ...col,
-            onCell: (record) => ({
-                record,
-                inputType: col.dataIndex === 'age' ? 'number' : 'text',
-                dataIndex: col.dataIndex,
-                title: col.title,
-                editing: isEditing(record),
-            }),
-        };
+    const mergedColumns = columns.concat({
+        title: 'Operation',
+        dataIndex: 'operation',
+        render: (_, record) => {
+            const editable = isEditing(record);
+            return editable ? (
+                <span>
+                    <Typography.Link
+                        onClick={() => save(record.key)}
+                        style={{ marginRight: 8 }}
+                    >
+                        Save
+                    </Typography.Link>
+                    <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+                        <a>Cancel</a>
+                    </Popconfirm>
+                </span>
+            ) : (
+                <>
+                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                        Edit
+                    </Typography.Link>
+                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
+                        <a style={{ marginLeft: 8 }}>Delete</a>
+                    </Popconfirm>
+                </>
+            );
+        },
     });
 
     return (

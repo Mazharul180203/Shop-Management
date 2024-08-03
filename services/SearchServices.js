@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 const CategoryItemService = async (req) => {
     try {
-        const prisma = new PrismaClient();
         const { categoryId } = req.params
         const categoryItem = await prisma.items.findMany({
             where: {
@@ -21,10 +21,9 @@ const CategoryItemService = async (req) => {
 }
 
 const ItemDetailService = async (req) => {
-    const prisma = new PrismaClient();
     try {
         const { itemId } = req.params;
-        const itemIdInt = parseInt(itemId);  // Ensure itemId is an integer
+        const itemIdInt = parseInt(itemId);  
 
         if (isNaN(itemIdInt)) {
             throw new Error("Invalid itemId");
