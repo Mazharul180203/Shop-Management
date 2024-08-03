@@ -134,6 +134,7 @@ model customer {
   customer_name        String
   customerId           customertype           @relation(fields: [customertypeId], references: [id])
   customertypeId       Int
+  customerdetails      customerdetails[]
   sales                sales[]
   salescustomertracker salescustomertracker[]
   customerledger       customerledger[]
@@ -215,4 +216,16 @@ model supplierledger {
   balance      Float
   createdAt    DateTime @default(now()) @db.DateTime
   updatedAt    DateTime @default(now()) @updatedAt @db.DateTime
+}
+
+model customerdetails {
+  id            Int      @id @default(autoincrement())
+  customer      customer @relation(fields: [customerId], references: [id])
+  customerId    Int
+  customer_name String
+  mob_no        String
+  address       String
+  description   String
+  createdAt     DateTime @default(now()) @db.DateTime
+  updatedAt     DateTime @default(now()) @updatedAt @db.DateTime
 }

@@ -132,7 +132,7 @@ const CustomerPaymentService = async (req, res) => {
 };
 
 
-const GetSalesCustomerTrackerService = async (req,res) =>{
+const GetSalesCustomerTrackerService = async (req) =>{
     const customerId = parseInt(req.params.customerId);
     try{
         const existingCustomerInfo = await prisma.salescustomertracker.findMany({
@@ -149,4 +149,25 @@ const GetSalesCustomerTrackerService = async (req,res) =>{
     }
 }
 
-export {SaleItemService,SalesCustomerTrackerService,CustomerPaymentService,GetSalesCustomerTrackerService}
+const CustomerDetailsService = async (req) => {
+    const { customerId, customer_name, mob_no, address, description } = req.body;
+    console.log("Customer Details:", req.body);
+    try {
+        const customerDetails = await prisma.customerdetails.create({
+            data: {
+                customerId,
+                customer_name,
+                mob_no,
+                address,
+                description,
+            }
+        });
+        return { status: "success", data: customerDetails };
+    } catch (e) {
+        console.error(e);
+        return { status: "fail", data: e.message };
+    }
+};
+
+
+export {SaleItemService,SalesCustomerTrackerService,CustomerPaymentService,GetSalesCustomerTrackerService,CustomerDetailsService}

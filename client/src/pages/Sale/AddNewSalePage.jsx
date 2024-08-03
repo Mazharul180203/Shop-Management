@@ -4,6 +4,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../../config/config.js";
 import toast from "react-hot-toast";
 import moment from "moment";
+import TextArea from "antd/es/input/TextArea.js";
 
 const { Option } = Select;
 
@@ -14,6 +15,12 @@ const AddNewSalePage = () => {
     const [productList, setProductList] = useState([]);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [supplierBalance, setSupplierBalance] = useState([]);
+    const [customerDetails,setCustomerDetails] = useState({
+        customer_name:'',
+        mob_no:'',
+        address:'',
+        description:''
+    })
     const [paidcost, setPaidCost] = useState({
         paid:0,
         updated_current_bal:0,
@@ -185,18 +192,27 @@ const AddNewSalePage = () => {
                     paid: paidcost['paid'],
                     curr_balance: parseFloat(paidcost['updated_current_bal']),
                     payment_type: paidcost['paid_status'],
-                    voucher_no: formData['voucher_no']
+                    voucher_no: formData['voucher_no'].toString()
 
                 },
                 { withCredentials: true }
             );
+            const customerDetailsRequest = axios.post(
+                `${BASE_URL}/api/v1/customerDetails`,{
+                    customerId:formData.customerId,
+                    customer_name:customerDetails.customer_name,
+                    mob_no:customerDetails.mob_no,
+                    address:customerDetails.address,
+                    description:customerDetails.description,
+                },{withCredentials: true})
 
-            const [saleItemsResponse, saleCustomerTrackerResponse] = await Promise.all([
+            const [saleItemsResponse, saleCustomerTrackerResponse,customerDetailsResponse] = await Promise.all([
                 saleItemsRequest,
-                saleCustomerTrackerRequest
+                saleCustomerTrackerRequest,
+                customerDetailsRequest
             ]);
 
-            if (saleItemsResponse.data.status === "success" && saleCustomerTrackerResponse.data.status === "success") {
+            if (saleItemsResponse.data.status === "success" && saleCustomerTrackerResponse.data.status === "success" && customerDetailsResponse.data.status === "success") {
                 toast.success('Successfully Sale Product');
             } else {
                 toast.error('An error occurred with one or both requests');
@@ -364,46 +380,91 @@ const AddNewSalePage = () => {
                             </Table.Summary.Row>
                         )}
                     />
-
-                    <div className="row justify-content-end mt-4">
-                        <div className="col-md-6">
-                            <Form.Item label="Transport And Labour Cost">
-                                <Input name="transportCost" value={transportCost} onChange={handleTransportCostChange}/>
-                            </Form.Item>
+                    <div className="container">
+                        <div className="row mt-4">
+                            <div className="col-md-6">
+                                <Form.Item label="Customer Name">
+                                    <Input name="customer_name" value={customerDetails.customer_name}
+                                           onChange={(e)=>(
+                                               setCustomerDetails({
+                                                   ...customerDetails,customer_name:e.target.value
+                                               })
+                                           )}/>
+                                </Form.Item>
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label="Transport And Labour Cost">
+                                    <Input name="transportCost" value={transportCost}
+                                           onChange={handleTransportCostChange}/>
+                                </Form.Item>
+                            </div>
                         </div>
 
-                    </div>
-                    <div className="row justify-content-end">
-                        <div className="col-md-3">
-                            <Form.Item label="Previous Balance">
-                                <Input name="supplierbalance"
-                                       value={supplierBalance[0]?.curr_balance || 'not available'} readOnly/>
-                            </Form.Item>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <Form.Item label="Mobile No.">
+                                    <Input name="mob_no" value={customerDetails.mob_no}
+                                           onChange={(e)=>(
+                                               setCustomerDetails({
+                                                   ...customerDetails,mob_no:e.target.value
+                                               })
+                                           )}/>
+                                </Form.Item>
+                            </div>
+
+                            <div className="col-md-3">
+                                <Form.Item label="Previous Balance">
+                                    <Input name="supplierbalance"
+                                           value={supplierBalance[0]?.curr_balance || 'not available'} readOnly/>
+                                </Form.Item>
+                            </div>
+                            <div className="col-md-3">
+                                <Form.Item label="Balance Status">
+                                    <Input name="balancestatus"
+                                           value={supplierBalance[0]?.payment_type || 'not available'} readOnly/>
+                                </Form.Item>
+                            </div>
                         </div>
-                        <div className="col-md-3">
-                            <Form.Item label="Balance Status">
-                                <Input name="balancestatus"
-                                       value={supplierBalance[0]?.payment_type || 'not available'} readOnly/>
-                            </Form.Item>
+
+                        <div className="row">
+                            <div className="col-md-6">
+                                <Form.Item label="Address">
+                                    <TextArea name="address" value={customerDetails.address}
+                                           onChange={(e)=>(
+                                               setCustomerDetails({
+                                                   ...customerDetails,address:e.target.value
+                                               })
+                                           )}/>
+                                </Form.Item>
+                            </div>
+                            <div className="col-md-6">
+                                <Form.Item label="Paid">
+                                    <Input name="paid" value={paidcost.paid} onChange={handlePaidChange}/>
+                                </Form.Item>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row justify-content-end">
-                        <div className="col-md-6">
-                            <Form.Item label="Paid">
-                                <Input name="paid" value={paidcost.paid} onChange={handlePaidChange}/>
-                            </Form.Item>
-                        </div>
-                    </div>
-                    <div className="row justify-content-end">
-                        <div className="col-md-3">
-                            <Form.Item label="Supplier Current Balance">
-                                <Input name="currentbalance" value={paidcost.updated_current_bal} readOnly/>
-                            </Form.Item>
-                        </div>
-                        <div className="col-md-3">
-                            <Form.Item label="Paid Status">
-                                <Input name="paidstatus" value={paidcost.paid_status} readOnly/>
-                            </Form.Item>
+
+                        <div className="row">
+                            <div className="col-md-6">
+                                <Form.Item label="Description">
+                                    <TextArea name="description" value={customerDetails.description}
+                                              onChange={(e) => (
+                                                  setCustomerDetails({
+                                                      ...customerDetails, description: e.target.value
+                                                  })
+                                              )}/>
+                                </Form.Item>
+                            </div>
+                            <div className="col-md-3">
+                                <Form.Item label="Supplier Current Balance">
+                                    <Input name="currentbalance" value={paidcost.updated_current_bal} readOnly/>
+                                </Form.Item>
+                            </div>
+                            <div className="col-md-3">
+                                <Form.Item label="Paid Status">
+                                    <Input name="paidstatus" value={paidcost.paid_status} readOnly/>
+                                </Form.Item>
+                            </div>
                         </div>
                     </div>
 

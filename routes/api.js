@@ -42,6 +42,8 @@ router.post('/saleItem',AuthVarification,SaleItemController.saleItem)
 router.post('/salesCustomerTracker',AuthVarification,SaleItemController.salesCustomerTracker)
 router.post('/customerPayment',AuthVarification,SaleItemController.customerPayment)
 router.get('/getsalescustomertracker/:customerId',AuthVarification,SaleItemController.getsalescustomertracker)
+router.post('/customerDetails',AuthVarification,SaleItemController.customerDetails)
+
 
 //ledger
 router.post('/transaction',AuthVarification,LedgerController.transaction)
