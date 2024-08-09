@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import toast from "react-hot-toast";
 import axios from "axios";
 import {BASE_URL} from "../../../../config/config.js";
+import toast from "react-hot-toast";
 import {Button, Form, Input, Select, Spin} from "antd";
-import moment from "moment/moment.js";
+import moment from "moment";
 
-
-const AddTransactionPage = () => {
+const SalePaymentPage = () => {
     const [loading, setLoading] = useState(false);
-    const [supplierList, setSupplierList] = useState([]);
+    const [customerList, setCustomerList] = useState([]);
     const [supplierBalance, setSupplierBalance] = useState([]);
     const generateRandomNineDigitNumber = () =>{
         const min = 100000000;
@@ -22,7 +21,7 @@ const AddTransactionPage = () => {
         total_cost:0,
     });
     const [formData, setFormData] = useState({
-        supplierId:'',
+        customerId:'',
         date:moment().format('DD-MM-YYYY'),
         voucher_no:generateRandomNineDigitNumber()
     });
@@ -36,8 +35,8 @@ const AddTransactionPage = () => {
     const getData = async () => {
         try {
             setLoading(true);
-            let res = await  axios.get(`${BASE_URL}/api/v1/dropdown/supplier`, { withCredentials: true });
-            setSupplierList(res.data.data);
+            let res = await axios.get(`${BASE_URL}/api/v1/dropdown/customer`, { withCredentials: true });
+            setCustomerList(res.data.data);
         } catch (error) {
             console.error("Error fetching data", error);
             toast.error("Error fetching data");
@@ -69,13 +68,13 @@ const AddTransactionPage = () => {
 
         try{
             setLoading(true);
-            let res = await axios.post(`${BASE_URL}/api/v1/purchasesuppliertracker`,{
-                supplierId: formData.supplierId,
+            let res = await axios.post(`${BASE_URL}/api/v1/salesCustomerTracker`,{
+                customerId: formData.customerId,
                 totalCost: paidcost['total_cost'],
                 paid: paidcost['paid'],
                 curr_balance: parseFloat(paidcost['updated_current_bal']),
                 payment_type: paidcost['paid_status'],
-                voucher_no:formData['voucher_no']   
+                voucher_no:formData['voucher_no']
             },{withCredentials:true})
 
             if (res.data.status === "success") {
@@ -110,12 +109,12 @@ const AddTransactionPage = () => {
                         </div>
                     </div>
                     <div className="row">
-                        <Form.Item label="Supplier">
-                            <Select name="supplierId" value={formData.supplierId}
+                        <Form.Item label="Customer">
+                            <Select name="customerId" value={formData.customerId}
                                     onChange={async (value) => {
-                                        handleSelectChange('supplierId', value)
+                                        handleSelectChange('customerId', value)
                                         if (value) {
-                                            let res = await axios.get(`${BASE_URL}/api/v1/getpurchasesuppliertracker/${value}`, {withCredentials: true});
+                                            let res = await axios.get(`${BASE_URL}/api/v1/getsalescustomertracker/${value}`, {withCredentials: true});
                                             console.log("res :", res.data.data)
                                             setSupplierBalance(res.data.data);
                                         } else {
@@ -125,8 +124,8 @@ const AddTransactionPage = () => {
                                     placeholder="Select Supplier">
                                 <Option value="">Select Supplier</Option>
                                 {
-                                    supplierList?.map((item) => (
-                                        <Option key={item?.id} value={item?.id}>{item?.supplier_name}</Option>
+                                    customerList?.map((item) => (
+                                        <Option key={item?.id} value={item?.id}>{item?.customer_name}</Option>
                                     ))
                                 }
                             </Select>
@@ -181,4 +180,4 @@ const AddTransactionPage = () => {
     );
 };
 
-export default AddTransactionPage;
+export default SalePaymentPage;

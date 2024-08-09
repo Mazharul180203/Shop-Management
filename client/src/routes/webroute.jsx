@@ -28,6 +28,7 @@ import ViewAllCustomer from "../components/Customer/ViewAllCustomer.jsx";
 import SaleItemsPage from "../pages/Sale/SaleItemsPage.jsx";
 import AddNewSale from "../components/Sale/AddNewSale.jsx";
 import AllSale from "../components/Sale/AllSale.jsx";
+import SalePayment from "../components/Sale/SalePayment.jsx";
 
 
 const Webroute = () => {
@@ -70,6 +71,7 @@ const Webroute = () => {
                     <Route path="/sale" element={<SaleItemsPage/>}/>
                     <Route path="/sale/addSale" element={<AddNewSale/>}/>
                     <Route path="/sale/allSale" element={<AllSale/>}/>
+                    <Route path="/sale/payment" element={<SalePayment/>}/>
                 </Routes>
             </BrowserRouter>
             )

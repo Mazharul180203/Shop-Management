@@ -11,6 +11,10 @@ const SaleRoutingPage = () => {
             to:'/sale/allSale',
             text:'All Sale'
         },
+        {
+            to:'/sale/payment',
+            text:'Payment'
+        },
     ]
     return (
         <div>

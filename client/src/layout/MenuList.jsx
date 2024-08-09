@@ -88,6 +88,9 @@ const MenuList = ({darkTheme}) => {
                 <Menu.Item key="add_all_sale">
                     <NavLink to="/sale/allSale" className={({ isActive }) => isActive ? "active-link" : ""}>All Sale</NavLink>
                 </Menu.Item>
+                <Menu.Item key="sale_payment">
+                    <NavLink to="/sale/payment" className={({ isActive }) => isActive ? "active-link" : ""}>Sale Payment</NavLink>
+                </Menu.Item>
             </Menu.SubMenu>
         </Menu>
     );
