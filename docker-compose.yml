@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: POS
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 12345678
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # Backend Service (Node.js)
+  backend:
+    build:
+      context: . # Backend is in the root folder
+      dockerfile: Dockerfile.backend # Use the backend Dockerfile
+    container_name: node_backend
+    environment:
+      DB_HOST: localhost
+      DB_USER: root
+      DB_PASSWORD: 12345678
+      DB_NAME: POS
+    ports:
+      - "5030:5030"
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+  # Frontend Service (React.js)
+  frontend:
+    build:
+      context: ./client # Frontend is in the "client" folder
+      dockerfile: Dockerfile.frontend # Use the frontend Dockerfile
+    container_name: react_frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:5030 # Point frontend to backend API
+    ports:
+      - "5373:5373"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
